@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { Fragment, useEffect, useState } from 'react';
+import personService from './services/person';
 
 const Persons = ({ persons, search }) => {
   if (search) {
@@ -65,14 +65,14 @@ const App = () => {
 
   useEffect(() => {
     const fetchPersons = async () => {
-      const res = await axios.get('http://localhost:3001/persons');
+      const res = await personService.getAll();
       setPersons(res.data);
     };
 
     fetchPersons();
   }, []);
 
-  const addPhoneBook = (e) => {
+  const addPhoneBook = async (e) => {
     e.preventDefault();
 
     const duplicatedPerson = persons.find(
@@ -89,7 +89,10 @@ const App = () => {
       number: newNumber,
       id: persons.length,
     };
+
     setPersons(persons.concat(newPerson));
+
+    const res = await personService.create(newPerson);
   };
 
   const handleNameOnChange = (e) => {

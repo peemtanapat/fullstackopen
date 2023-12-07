@@ -1,6 +1,10 @@
 {
   "persons": [
-    { "name": "Tanapat Choochot", "number": "099-35-42459", "id": 0 },
+    {
+      "name": "Tanapat Choochot",
+      "number": "099-35-42459",
+      "id": 0
+    },
     {
       "name": "Arto Hellas",
       "number": "040-123456",
@@ -20,6 +24,11 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "Harry Potter",
+      "number": "01823848854",
+      "id": 5
     }
   ]
 }
