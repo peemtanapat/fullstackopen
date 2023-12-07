@@ -1,4 +1,5 @@
-import { Fragment, useState } from 'react';
+import axios from 'axios';
+import { Fragment, useEffect, useState } from 'react';
 
 const Persons = ({ persons, search }) => {
   if (search) {
@@ -12,7 +13,7 @@ const Persons = ({ persons, search }) => {
       <h3>Numbers</h3>
       <ul>
         {persons.map((person) => (
-          <Person person={person} />
+          <Person key={person.id} person={person} />
         ))}
       </ul>
     </Fragment>
@@ -20,9 +21,9 @@ const Persons = ({ persons, search }) => {
 };
 
 const Person = ({ person }) => (
-  <li key={person.id}>
+  <p key={person.id}>
     {person.name} - {person.number}
-  </li>
+  </p>
 );
 
 const PersonForm = ({
@@ -36,10 +37,10 @@ const PersonForm = ({
       <form onSubmit={addPhoneBook}>
         <ul style={{ listStyleType: 'none' }}>
           <li>
-            name: <input onChange={handleNameOnChange} />
+            name: <input onChange={handleNameOnChange} required />
           </li>
           <li style={{ padding: '5px 0px 5px 0px' }}>
-            number: <input onChange={handleNumberOnChange} />
+            number: <input onChange={handleNumberOnChange} required />
           </li>
           <li>
             <button type="submit">add</button>
@@ -57,21 +58,37 @@ const PersonSearch = ({ handleSearch }) => (
 );
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Tanapat Choochot', number: '099-35-42459', id: 0 },
-    { name: 'Arto Hellas', number: '40-12-3456111', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
-    { name: 'Harry Potter', number: '11-21-3134512', id: 5 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [search, setSearch] = useState('');
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
 
+  useEffect(() => {
+    const fetchPersons = async () => {
+      const res = await axios.get('http://localhost:3001/persons');
+      setPersons(res.data);
+    };
+
+    fetchPersons();
+  }, []);
+
   const addPhoneBook = (e) => {
     e.preventDefault();
-    const newPerson = { name: newName, number: newNumber };
+
+    const duplicatedPerson = persons.find(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
+
+    if (duplicatedPerson) {
+      const warningMsg = `${newName} is already added to Phone Book`;
+      return alert(warningMsg);
+    }
+
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+      id: persons.length,
+    };
     setPersons(persons.concat(newPerson));
   };
 
