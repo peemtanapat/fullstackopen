@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import personService from './services/person';
 
-const Persons = ({ persons, search }) => {
+const Persons = ({ persons, search, handleOnDelete }) => {
   if (search) {
     persons = persons.filter((person) =>
       person.name.toLowerCase().includes(search.toLowerCase())
@@ -13,17 +13,24 @@ const Persons = ({ persons, search }) => {
       <h3>Numbers</h3>
       <ul>
         {persons.map((person) => (
-          <Person key={person.id} person={person} />
+          <Person
+            key={person.id}
+            person={person}
+            handleOnDelete={handleOnDelete}
+          />
         ))}
       </ul>
     </Fragment>
   );
 };
 
-const Person = ({ person }) => (
-  <p key={person.id}>
-    {person.name} - {person.number}
-  </p>
+const Person = ({ person, handleOnDelete }) => (
+  <li key={person.id}>
+    <span>
+      {person.name} - {person.number}
+      <button onClick={handleOnDelete(person)}>delete</button>
+    </span>
+  </li>
 );
 
 const PersonForm = ({
@@ -107,6 +114,17 @@ const App = () => {
     setSearch(e.target.value);
   };
 
+  const handleOnDelete = (person) => (e) => {
+    e.preventDefault();
+
+    if (confirm(`Delete ${person.name} ?`)) {
+      personService.deleteOne(person.id);
+
+      const leftPersons = persons.filter((p) => p.id != person.id);
+      setPersons(leftPersons);
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -116,7 +134,11 @@ const App = () => {
         handleNameOnChange={handleNameOnChange}
         handleNumberOnChange={handleNumberOnChange}
       />
-      <Persons persons={persons} search={search} />
+      <Persons
+        persons={persons}
+        search={search}
+        handleOnDelete={handleOnDelete}
+      />
     </div>
   );
 };
