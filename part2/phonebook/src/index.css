@@ -3,3 +3,18 @@ h1 {
   font-style: italic;
 }
 
+.notice {
+  background: lightgray;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.notice .success {
+  color: green;
+}
+.notice .error {
+  color: red;
+}

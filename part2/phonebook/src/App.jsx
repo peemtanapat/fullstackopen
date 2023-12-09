@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import personService from './services/person';
+import { v4 as uuidv4 } from 'uuid';
 import './index.css';
 
 const Persons = ({ persons, search, handleOnDelete }) => {
@@ -70,6 +71,7 @@ const App = () => {
   const [search, setSearch] = useState('');
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [noticeMsg, setNoticeMsg] = useState({ msg: '', type: '' });
 
   useEffect(() => {
     const fetchPersons = async () => {
@@ -103,11 +105,15 @@ const App = () => {
                 p.id != duplicatedPerson.id ? p : returnPerson.data
               )
             );
+            setNoticeMsg({
+              msg: `Updated ${duplicatedPerson.name}`,
+              type: 'success',
+            });
           })
           .catch((error) => {
-            alert(
-              `the person '${duplicatedPerson.name}' was already deleted from server`
-            );
+            const msg = `the person '${duplicatedPerson.name}' was already deleted from server`;
+            setNoticeMsg({ msg, type: 'error' });
+            alert(msg);
           });
         return;
       } else {
@@ -117,12 +123,22 @@ const App = () => {
 
     const newPerson = {
       ...newData,
-      id: persons.length,
+      id: uuidv4(),
     };
 
     setPersons(persons.concat(newPerson));
 
-    await personService.create(newPerson);
+    personService
+      .create(newPerson)
+      .then(() => {
+        setNoticeMsg({ msg: `Added ${newPerson.name}`, type: 'success' });
+      })
+      .catch((error) => {
+        setNoticeMsg({
+          msg: `Got error in Adding ${newPerson.name}: ${error}`,
+          type: 'error',
+        });
+      });
   };
 
   const handleNameOnChange = (e) => {
@@ -145,12 +161,14 @@ const App = () => {
 
       const leftPersons = persons.filter((p) => p.id != person.id);
       setPersons(leftPersons);
+      setNoticeMsg({ msg: `Deleted ${person.name}`, type: 'success' });
     }
   };
 
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={noticeMsg.msg} type={noticeMsg.type} />
       <PersonSearch handleSearch={handleSearch} />
       <PersonForm
         addPhoneBook={addPhoneBook}
@@ -162,6 +180,15 @@ const App = () => {
         search={search}
         handleOnDelete={handleOnDelete}
       />
+    </div>
+  );
+};
+
+const Notification = ({ message, type }) => {
+  const msgClassType = type === 'error' ? 'error' : 'success';
+  return (
+    <div className="notice">
+      <div className={msgClassType}>{message}</div>
     </div>
   );
 };
