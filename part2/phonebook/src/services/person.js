@@ -10,8 +10,12 @@ const create = async (newPerson) => {
   return await axios.post(PERSON_API, newPerson);
 };
 
+const updateOne = async (id, newData) => {
+  return await axios.put(PERSON_API + id, newData);
+};
+
 const deleteOne = async (id) => {
   return await axios.delete(PERSON_API + id);
 };
 
-export default { getAll, create, deleteOne };
+export default { getAll, create, updateOne, deleteOne };

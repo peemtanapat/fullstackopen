@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import personService from './services/person';
+import './index.css';
 
 const Persons = ({ persons, search, handleOnDelete }) => {
   if (search) {
@@ -86,20 +87,42 @@ const App = () => {
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     );
 
+    const newData = {
+      name: newName,
+      number: newNumber,
+    };
+
     if (duplicatedPerson) {
-      const warningMsg = `${newName} is already added to Phone Book`;
-      return alert(warningMsg);
+      const warningMsg = `${newName} is already added to Phone Book, replace the old number with a new one?`;
+      if (confirm(warningMsg)) {
+        personService
+          .updateOne(duplicatedPerson.id, newData)
+          .then((returnPerson) => {
+            setPersons(
+              persons.map((p) =>
+                p.id != duplicatedPerson.id ? p : returnPerson.data
+              )
+            );
+          })
+          .catch((error) => {
+            alert(
+              `the person '${duplicatedPerson.name}' was already deleted from server`
+            );
+          });
+        return;
+      } else {
+        return;
+      }
     }
 
     const newPerson = {
-      name: newName,
-      number: newNumber,
+      ...newData,
       id: persons.length,
     };
 
     setPersons(persons.concat(newPerson));
 
-    const res = await personService.create(newPerson);
+    await personService.create(newPerson);
   };
 
   const handleNameOnChange = (e) => {
@@ -127,7 +150,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
       <PersonSearch handleSearch={handleSearch} />
       <PersonForm
         addPhoneBook={addPhoneBook}
