@@ -1,0 +1,12 @@
+h1 {
+  color: green;
+  font-style: italic;
+}
+
+.warning {
+  font-style: italic;
+}
+
+div .flag {
+  font-size: 100px;
+}
