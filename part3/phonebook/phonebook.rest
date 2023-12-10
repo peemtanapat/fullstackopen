@@ -1,0 +1,20 @@
+### get current persons count
+GET http://localhost:3001/info
+
+### get all persons
+GET http://localhost:3001/api/persons
+
+### get a single person
+GET http://localhost:3001/api/persons/1
+
+### create a new person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "content": "My name is peemtanapat",
+  "important": true
+}
+
+### delete a single person
+DELETE http://localhost:3001/api/persons/1
