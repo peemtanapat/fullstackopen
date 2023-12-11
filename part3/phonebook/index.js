@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const { getRandomInt } = require('./utils');
 const app = express();
 
 // takes the JSON data of a request, transforms it into a JavaScript object
 // then attaches it to the body property of the request object
 app.use(express.json());
+app.use(cors());
 
 let persons = [
   {
@@ -99,7 +101,7 @@ app.delete('/api/persons/:id', (req, res) => {
   res.sendStatus(204);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT);
 
