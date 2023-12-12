@@ -6,6 +6,7 @@ const app = express();
 // takes the JSON data of a request, transforms it into a JavaScript object
 // then attaches it to the body property of the request object
 app.use(express.json());
+app.use(express.static('dist'));
 app.use(cors());
 
 let persons = [
