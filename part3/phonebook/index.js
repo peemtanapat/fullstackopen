@@ -1,6 +1,9 @@
+require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 const cors = require('cors');
 const { getRandomInt } = require('./utils');
+const Person = require('./models/person');
+
 const app = express();
 
 // takes the JSON data of a request, transforms it into a JavaScript object
@@ -9,62 +12,44 @@ app.use(express.json());
 app.use(express.static('dist'));
 app.use(cors());
 
-let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-  {
-    id: 5,
-    name: 'Harry Potter',
-    number: '01823848854',
-  },
-];
-
 app.get('/', (req, res) => {
   res.send('<h1>Backend Home</h1>');
 });
 
 app.get('/info', (req, res) => {
-  const phoneBookCount = `Phonebook has info for ${persons.length} people`;
-  const dateTime = new Date().toISOString();
-  const result = `<div>
-      <p>${phoneBookCount}</p>
-      <p>${dateTime}</p>
-    </div>`;
+  Person.count().then((count) => {
+    const phoneBookCount = `Phonebook has info for ${count} people`;
+    const dateTime = new Date().toISOString();
+    const result = `<div>
+        <p>${phoneBookCount}</p>
+        <p>${dateTime}</p>
+      </div>`;
 
-  res.send(result);
+    res.send(result);
+  });
 });
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  Person.find({}).then((allPersons) => {
+    res.json(allPersons);
+  });
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
-  const foundPerson = persons.find((p) => p.id === parseInt(id));
-  if (!foundPerson) {
-    res.sendStatus(404);
-    return;
-  }
 
-  res.json(foundPerson);
+  Person.findById(id)
+    .then((person) => {
+      if (!person) {
+        res.send(404).end();
+      } else {
+        res.json(person);
+      }
+    })
+    .catch((error) => {
+      console.log('getPersonById', error);
+      next(error);
+    });
 });
 
 app.post('/api/persons', (req, res) => {
@@ -74,38 +59,67 @@ app.post('/api/persons', (req, res) => {
     return res.sendStatus(400);
   }
 
-  const duplicatedName = persons.find(
-    (p) => p.name.toLowerCase() === newData.name.toLowerCase()
-  );
+  Person.find({})
+    .then((allPersons) => {
+      const duplicatedName = allPersons.find(
+        (p) => p.name.toLowerCase() === newData.name.toLowerCase()
+      );
 
-  if (duplicatedName) {
-    return res.status(400).json({ error: 'name must be unique' });
-  }
+      if (duplicatedName) {
+        // TODO: If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL.
+        return res.status(400).json({ error: 'name must be unique' });
+      }
 
-  const newId = getRandomInt(100000);
-  const newPerson = {
-    id: newId,
-    name: newData.name,
-    number: newData.number,
-  };
+      const newPerson = {
+        name: newData.name,
+        number: newData.number,
+      };
 
-  persons.push(newPerson);
-  res.json(newPerson);
+      Person.create(newPerson)
+        .then((savedNewPerson) => {
+          res.json(savedNewPerson);
+        })
+        .catch((createError) => {
+          console.log('createError', createError);
+          next(error);
+        });
+    })
+    .catch((error) => {
+      console.log('createError:find', createError);
+      next(error);
+    });
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
-  const beforeCount = persons.length;
-  const leftPersons = persons.filter((p) => p.id !== parseInt(id));
 
-  if (beforeCount === leftPersons.length) {
-    res.sendStatus(404);
-    return;
-  }
-
-  persons = leftPersons;
-  res.sendStatus(204);
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      if (result) {
+        res.status(204).end();
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+
+const errorHandler = (error, req, res, next) => {
+  console.error({ errorName: error.name, errorMessage: error.message });
+
+  if (error.name === 'CastError') {
+    const personId = req.url.split('/').pop();
+    return res.status(400).send({ error: `malformatted id: ${personId}` });
+  }
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 
