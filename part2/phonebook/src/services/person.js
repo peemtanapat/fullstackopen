@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const PERSON_API = '/api/persons';
+const PERSON_API = '/api/persons/';
 
 const getAll = async () => {
   return await axios.get(PERSON_API);
