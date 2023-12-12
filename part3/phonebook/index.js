@@ -29,6 +29,11 @@ let persons = [
     name: 'Mary Poppendieck',
     number: '39-23-6423122',
   },
+  {
+    id: 5,
+    name: 'Harry Potter',
+    number: '01823848854',
+  },
 ];
 
 app.get('/', (req, res) => {
