@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
 import personService from './services/person';
-import { v4 as uuidv4 } from 'uuid';
 import './index.css';
 
 const Persons = ({ persons, search, handleOnDelete }) => {
@@ -121,21 +120,15 @@ const App = () => {
       }
     }
 
-    const newPerson = {
-      ...newData,
-      id: uuidv4(),
-    };
-
-    setPersons(persons.concat(newPerson));
-
     personService
-      .create(newPerson)
-      .then(() => {
-        setNoticeMsg({ msg: `Added ${newPerson.name}`, type: 'success' });
+      .create(newData)
+      .then((newPerson) => {
+        setNoticeMsg({ msg: `Added ${newData.name}`, type: 'success' });
+        setPersons(persons.concat(newPerson.data));
       })
       .catch((error) => {
         setNoticeMsg({
-          msg: `Got error in Adding ${newPerson.name}: ${error}`,
+          msg: `Got error in Adding ${newData.name}: ${error}`,
           type: 'error',
         });
       });
@@ -185,6 +178,8 @@ const App = () => {
 };
 
 const Notification = ({ message, type }) => {
+  if (!message) return;
+
   const msgClassType = type === 'error' ? 'error' : 'success';
   return (
     <div className="notice">
