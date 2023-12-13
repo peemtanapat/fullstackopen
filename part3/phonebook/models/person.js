@@ -10,7 +10,9 @@ const {
 set('strictQuery', false);
 
 const url = process.env.MONGODB_URI;
+
 console.log('%c⧭', 'color: #aa00ff', { url });
+
 connect(url)
   .then((res) => {
     console.log('connected to MongoDB');

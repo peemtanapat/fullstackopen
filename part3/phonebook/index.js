@@ -66,8 +66,16 @@ app.post('/api/persons', (req, res, next) => {
       );
 
       if (duplicatedName) {
-        // TODO: If the user tries to create a new phonebook entry for a person whose name is already in the phonebook, the frontend will try to update the phone number of the existing entry by making an HTTP PUT request to the entry's unique URL.
-        return res.status(400).json({ error: 'name must be unique' });
+        return personFindByIdAndUpdate({
+          id: duplicatedName.id,
+          number: newData.number,
+        })
+          .then((updatedPerson) => {
+            res.json(updatedPerson);
+          })
+          .catch((error) => {
+            return next(error);
+          });
       }
 
       const newPerson = {
@@ -87,16 +95,23 @@ app.post('/api/persons', (req, res, next) => {
     });
 });
 
-app.put('api/persons/:id', (req, res, next) => {
-  const id = req.params.id;
-  const { name, number } = req.body;
-
-  Person.findByIdAndUpdate(
+const personFindByIdAndUpdate = ({ id, name, number }) => {
+  return Person.findByIdAndUpdate(
     id,
     { name, number },
     { new: true, runValidators: true, context: 'query' }
-  )
+  );
+};
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const id = req.params.id;
+  const { name, number } = req.body;
+
+  personFindByIdAndUpdate({ id, name, number })
     .then((updatedPerson) => {
+      if (!updatedPerson) {
+        return res.status(404).json({ error: 'not found specific id' });
+      }
       res.json(updatedPerson);
     })
     .catch((error) => next(error));

@@ -110,7 +110,13 @@ const App = () => {
             });
           })
           .catch((error) => {
-            const msg = `the person '${duplicatedPerson.name}' was already deleted from server`;
+            let msg;
+
+            if (error.response.status === 404) {
+              msg = `the person '${duplicatedPerson.name}' was already deleted from server`;
+            } else {
+              msg = `${error.response.statusText}: ${error.response.data.error}`;
+            }
             setNoticeMsg({ msg, type: 'error' });
             alert(msg);
           });
