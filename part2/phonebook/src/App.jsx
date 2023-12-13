@@ -128,7 +128,7 @@ const App = () => {
       })
       .catch((error) => {
         setNoticeMsg({
-          msg: `Got error in Adding ${newData.name}: ${error}`,
+          msg: `${error.response.statusText}: ${error.response.data.error}`,
           type: 'error',
         });
       });

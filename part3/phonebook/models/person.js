@@ -20,8 +20,22 @@ connect(url)
   });
 
 const phoneBookSchema = new Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minLength: 3,
+    required: true,
+  },
+  number: {
+    type: String,
+    minLength: 8,
+    required: true,
+    validate: {
+      validator: (value) => {
+        return /^\d{2,3}\-\d{6,10}$/.test(value);
+      },
+      message: (props) => `${props.value} is invalid phone number format!`,
+    },
+  },
 });
 
 phoneBookSchema.set('toJSON', {
