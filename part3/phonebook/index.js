@@ -136,7 +136,7 @@ const unknownEndpoint = (req, res) => {
 
 app.use(unknownEndpoint)
 
-const errorHandler = (error, req, res, next) => { // eslint-disable-line no-unused-vars
+const errorHandler = (error, req, res, next) => {
   console.error({ errorName: error.name, errorMessage: error.message })
 
   if (error.name === 'CastError') {
@@ -146,6 +146,8 @@ const errorHandler = (error, req, res, next) => { // eslint-disable-line no-unus
   if (error.name === 'ValidationError') {
     return res.status(400).send({ error: error.message })
   }
+
+  next(error)
 }
 
 app.use(errorHandler)
