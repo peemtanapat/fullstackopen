@@ -8,9 +8,11 @@
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "npm run lint:fix && nodemon index.js",
     "dev:inspect": "nodemon --inspect index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix *.js models/*.js"
   },
   "repository": {
     "type": "git",

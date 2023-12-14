@@ -1,25 +1,23 @@
 const {
   connect,
-  connection,
-  model,
   Schema,
   set,
   default: mongoose,
-} = require('mongoose');
+} = require('mongoose')
 
-set('strictQuery', false);
+set('strictQuery', false)
 
-const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI
 
-console.log('%c⧭', 'color: #aa00ff', { url });
+console.log('%c⧭', 'color: #aa00ff', { url })
 
 connect(url)
-  .then((res) => {
-    console.log('connected to MongoDB');
+  .then(() => {
+    console.log('connected to MongoDB')
   })
   .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message);
-  });
+    console.log('error connecting to MongoDB:', error.message)
+  })
 
 const phoneBookSchema = new Schema({
   name: {
@@ -33,20 +31,20 @@ const phoneBookSchema = new Schema({
     required: true,
     validate: {
       validator: (value) => {
-        return /^\d{2,3}\-\d{6,10}$/.test(value);
+        return /^\d{2,3}-\d{6,10}$/.test(value)
       },
       message: (props) => `${props.value} is invalid phone number format!`,
     },
   },
-});
+})
 
 phoneBookSchema.set('toJSON', {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    returnedObject.created_by = 'peemtanapat';
-    delete returnedObject._id;
-    delete returnedObject.__v;
+    returnedObject.id = returnedObject._id.toString()
+    returnedObject.created_by = 'peemtanapat'
+    delete returnedObject._id
+    delete returnedObject.__v
   },
-});
+})
 
-module.exports = mongoose.model('Person', phoneBookSchema);
+module.exports = mongoose.model('Person', phoneBookSchema)
