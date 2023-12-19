@@ -1,18 +1,6 @@
-const mongoose = require('mongoose')
-const { MONGODB_URI } = require('../utils/config')
+const myMongoose = require('../database/myMongoose')
 
-console.log({ MONGODB_URI })
-
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
-
-const blogSchema = new mongoose.Schema({
+const blogSchema = new myMongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -23,6 +11,10 @@ const blogSchema = new mongoose.Schema({
   },
   url: { type: String, required: true },
   likes: Number,
+  user: {
+    type: myMongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 })
 
 blogSchema.set('toJSON', {
@@ -33,4 +25,4 @@ blogSchema.set('toJSON', {
   },
 })
 
-module.exports = mongoose.model('Blog', blogSchema)
+module.exports = myMongoose.model('Blog', blogSchema)

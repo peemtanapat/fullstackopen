@@ -3,7 +3,8 @@ require('dotenv').config({ path: __dirname + '/.env' })
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const blog = require('../models/blog')
+const Blog = require('../models/blog')
+const helper = require('../utils/test_helper')
 
 const api = supertest(app)
 
@@ -24,15 +25,32 @@ const initialBlogs = [
   },
 ]
 
-beforeAll(async () => {
-  await blog.deleteMany({})
-  let firstBlog = new blog(initialBlogs[0])
-  await firstBlog.save()
-  let secondBlog = new blog(initialBlogs[1])
-  secondBlog.save()
-})
-
 describe('Blog List API Tests', () => {
+  let token = ''
+
+  beforeAll(async () => {
+    const user = await helper.initFirstUser()
+
+    const resLogin = await api
+      .post('/api/login')
+      .send({ username: helper.INIT_USERNAME, password: helper.INIT_PASSWORD })
+
+    token = resLogin.body.token
+    console.log('%c⧭', 'color: #1d3f73', {
+      token,
+    })
+
+    const initialBlogsWithUserId = initialBlogs.map((blog) => {
+      return { ...blog, user: user.id }
+    })
+
+    await Blog.deleteMany({})
+    let firstBlog = new Blog(initialBlogsWithUserId[0])
+    await firstBlog.save()
+    let secondBlog = new Blog(initialBlogsWithUserId[1])
+    secondBlog.save()
+  })
+
   describe('GET All', () => {
     test('return JSON', async () => {
       await api
@@ -70,19 +88,33 @@ describe('Blog List API Tests', () => {
       author: 'peemtanapat',
       url: 'https://medium.com/peemtanapat/road-to-80k-subscriber',
       likes: 22,
+      userId: '',
     }
 
+    test('fails with the proper status code 401 Unauthorized if a token is not provided', async () => {
+      await api.post('/api/blogs').send(newBlog).expect(401)
+    })
+
     test('successfully creates a new blog post', async () => {
-      const res = await api.post('/api/blogs').send(newBlog).expect(201)
+      const initUserId = await helper.getInitUserId()
+      newBlog.userId = initUserId
+
+      const res = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201)
+
       const savedBlog = res.body
       delete savedBlog.id
+      delete newBlog.userId
 
-      expect(res.body).toEqual(newBlog)
+      expect(savedBlog).toEqual({ ...newBlog, user: initUserId })
 
       const resGetAll = await api.get('/api/blogs')
 
       expect(resGetAll.body.length).toBe(initialBlogs.length + 1)
-    })
+    }, 30000)
 
     test('if the title is missing from the request data, return 400', async () => {
       const newBlogWithoutTitle = { ...newBlog }
@@ -90,6 +122,7 @@ describe('Blog List API Tests', () => {
 
       const res = await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlogWithoutTitle)
         .expect(400)
 
@@ -99,8 +132,12 @@ describe('Blog List API Tests', () => {
       const newBlogWithoutUrl = { ...newBlog }
       delete newBlogWithoutUrl.url
 
-      await api.post('/api/blogs').send(newBlogWithoutUrl).expect(400)
-    })
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newBlogWithoutUrl)
+        .expect(400)
+    }, 30000)
 
     test('if url property is missing, return 400', async () => {
       const newBlogWithoutUrl = { ...newBlog }
@@ -108,6 +145,7 @@ describe('Blog List API Tests', () => {
 
       const res = await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlogWithoutUrl)
         .expect(400)
 
@@ -121,6 +159,7 @@ describe('Blog List API Tests', () => {
 
       const res = await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlogWithoutLikes)
         .expect(201)
       expect(JSON.stringify(res.body)).toContain(`\"likes\":0`)
