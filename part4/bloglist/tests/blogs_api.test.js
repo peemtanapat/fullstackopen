@@ -29,22 +29,21 @@ describe('Blog List API Tests', () => {
   let token = ''
 
   beforeAll(async () => {
-    const user = await helper.initFirstUser()
+    await helper.clearUsers()
+    await Blog.deleteMany({})
+
+    const user = await helper.createMockUser()
 
     const resLogin = await api
       .post('/api/login')
       .send({ username: helper.INIT_USERNAME, password: helper.INIT_PASSWORD })
 
     token = resLogin.body.token
-    console.log('%c⧭', 'color: #1d3f73', {
-      token,
-    })
 
     const initialBlogsWithUserId = initialBlogs.map((blog) => {
       return { ...blog, user: user.id }
     })
 
-    await Blog.deleteMany({})
     let firstBlog = new Blog(initialBlogsWithUserId[0])
     await firstBlog.save()
     let secondBlog = new Blog(initialBlogsWithUserId[1])
@@ -165,7 +164,51 @@ describe('Blog List API Tests', () => {
       expect(JSON.stringify(res.body)).toContain(`\"likes\":0`)
     })
   })
-})
+
+  describe('Delete a blog', () => {
+    test('fails with the proper status code 401 Unauthorized if a token is not provided', async () => {
+      const allBlogs = await api.get('/api/blogs').expect(200)
+      const fistBlogId = allBlogs.body[0].id
+
+      await api.delete(`/api/blogs/${fistBlogId}`).expect(401)
+    }, 30000)
+
+    test('successful delete a blog', async () => {
+      const allBlogs = await api.get('/api/blogs').expect(200)
+      const fistBlogId = allBlogs.body[0].id
+      const beforeDeleteCount = allBlogs.body.length
+
+      const res = await api
+        .delete(`/api/blogs/${fistBlogId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200)
+      expect(JSON.stringify(res.body)).toContain(fistBlogId)
+
+      const afterAllBlogs = await api.get('/api/blogs').expect(200)
+      const afterDeleteCount = afterAllBlogs.body.length
+      expect(afterDeleteCount).toBe(beforeDeleteCount - 1)
+    }, 30000)
+
+    test('fail if request is not the blog creator', async () => {
+      // get blog id
+      const allBlogs = await api.get('/api/blogs').expect(200)
+      const fistBlogId = allBlogs.body[0].id
+      // mock a new user
+      const user = await helper.createMockUser('user001', 'passw0rd', 'USER001')
+      const resLogin = await api
+        .post('/api/login')
+        .send({ username: 'user001', password: 'passw0rd' })
+
+      token = resLogin.body.token
+
+      const res = await api
+        .delete(`/api/blogs/${fistBlogId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(401)
+      expect(JSON.stringify(res.body)).toContain('Unauthorized')
+    }, 30000)
+  }, 500000)
+}, 500000)
 
 afterAll(async () => {
   await mongoose.connection.close()

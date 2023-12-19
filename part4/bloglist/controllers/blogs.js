@@ -37,16 +37,12 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
     user: user._id,
   })
 
-  // try {
   const savedBlog = await newBlog.save()
   user.blogs = user.blogs.concat(savedBlog._id)
 
   user.save()
 
   return res.status(201).json(savedBlog)
-  // } catch (error) {
-  //   logger.error(error)
-  // }
 })
 
 blogsRouter.delete('/:id', userExtractor, async (req, res) => {
@@ -58,7 +54,7 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized: not the creator' })
   }
 
-  const result = await Blog.deleteOne({ _id: id })
+  const result = await Blog.findOneAndDelete(id)
   return res.json(result)
 })
 

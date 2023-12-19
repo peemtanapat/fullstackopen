@@ -46,7 +46,6 @@ const userExtractor = async (req, res, next) => {
   }
 
   const foundUser = await User.findById(decodedToken.id)
-  console.log('%c⧭', 'color: #735656', { foundUser })
 
   if (!foundUser) {
     return res.status(404).json({ error: 'Not Found specific userId' })

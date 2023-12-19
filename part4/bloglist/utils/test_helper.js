@@ -17,24 +17,31 @@ const getInitUserId = async () => {
   return initUser._id.toString()
 }
 
-const initFirstUser = async () => {
+const clearUsers = async () => {
   await User.deleteMany({})
+}
 
-  const passwordHash = await bcrypt.hash(INIT_PASSWORD, 10)
+const createMockUser = async (
+  username = INIT_USERNAME,
+  password = INIT_PASSWORD,
+  name = INIT_NAME,
+) => {
+  const passwordHash = await bcrypt.hash(password, 10)
   const user = new User({
-    username: INIT_USERNAME,
-    name: INIT_NAME,
+    username: username,
+    name: name,
     password: passwordHash,
   })
 
   const savedUser = await user.save()
-  return savedUser._id.toString()
+  return savedUser._id
 }
 
 module.exports = {
   usersInDb,
   getInitUserId,
-  initFirstUser,
+  createMockUser,
+  clearUsers,
   INIT_USERNAME,
   INIT_PASSWORD,
 }

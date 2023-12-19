@@ -14,7 +14,8 @@ mongoose.set('bufferTimeoutMS', 30000)
 describe('User List API Tests', () => {
   describe('when there is initially one user in db', () => {
     beforeEach(async () => {
-      await helper.initFirstUser()
+      await helper.clearUsers()
+      await helper.createMockUser()
     })
 
     test('creation succeeds with a fresh username', async () => {
@@ -77,8 +78,6 @@ describe('User List API Tests', () => {
         .post('/api/users')
         .send(newUserWithWrongPassword)
         .expect(400)
-
-      console.log('%c⧭', 'color: #d90000', { body: res.body })
 
       expect(res.body.error).toContain('3 characters')
     })
