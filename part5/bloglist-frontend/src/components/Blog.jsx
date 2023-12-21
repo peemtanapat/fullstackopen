@@ -1,0 +1,57 @@
+import React from 'react'
+import { Fragment, useState } from 'react'
+
+const blogStyle = {
+  paddingTop: 10,
+  paddingLeft: 10,
+  border: 'solid',
+  borderWidth: 1,
+  marginBottom: 5,
+}
+
+const Blog = ({ blog }) => {
+  const [viewDetailVisible, setViewDetailVisible] = useState(false)
+  const hideWhenDetailVisible = viewDetailVisible
+    ? { display: 'none' }
+    : { display: '' }
+  const showWhenDetailVisible = viewDetailVisible
+    ? { display: '' }
+    : { display: 'none' }
+
+  return (
+    <div style={blogStyle}>
+      {blog.title} by {blog.author}
+      <button
+        style={hideWhenDetailVisible}
+        onClick={() => setViewDetailVisible(true)}
+      >
+        view
+      </button>
+      <button
+        style={showWhenDetailVisible}
+        onClick={() => setViewDetailVisible(false)}
+      >
+        hide
+      </button>
+      <BlogDetail blog={blog} visible={showWhenDetailVisible} />
+    </div>
+  )
+}
+
+const BlogDetail = ({ blog, visible }) => {
+  return (
+    <Fragment>
+      <div style={visible}>
+        <ul>
+          <li>URL: {blog.url}</li>
+          <li>
+            Likes: {blog.likes} <button>like</button>
+          </li>
+          <li>Admin: {blog.user.name}</li>
+        </ul>
+      </div>
+    </Fragment>
+  )
+}
+
+export default Blog
