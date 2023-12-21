@@ -26,14 +26,13 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [createdBlog, setCreatedBlog] = useState(null)
+  const [updatedBlog, setUpdatedBlog] = useState(null)
 
   const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
-  // TODO: Create New Blog (Togglable)
-
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [createdBlog])
+  }, [createdBlog, updatedBlog])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(LOGGED_BLOG_APP_USER)
@@ -112,6 +111,32 @@ const App = () => {
     }
   }
 
+  const handleUpLikeBlog = async (event, updatedBlog) => {
+    event.preventDefault()
+
+    const updatedLikeBlog = {
+      ...updatedBlog,
+      likes: updatedBlog.likes + 1,
+      user: updatedBlog.user.id,
+    }
+
+    try {
+      const updatedBlog = await blogService.update({
+        updatedBlog: updatedLikeBlog,
+      })
+      setUpdatedBlog(updatedBlog)
+    } catch (error) {
+      setNotificationMsg({
+        msg: `Like blog error: ${pathOr(
+          error.message,
+          'response.data.error'.split('.'),
+          error,
+        )}`,
+        isError: true,
+      })
+    }
+  }
+
   return (
     <Fragment>
       <Notification
@@ -146,6 +171,7 @@ const App = () => {
             user={user}
             handleLogout={handleLogout}
             handleCreateBlog={handleCreateBlog}
+            handleUpLikeBlog={handleUpLikeBlog}
           />
         </Fragment>
       )}

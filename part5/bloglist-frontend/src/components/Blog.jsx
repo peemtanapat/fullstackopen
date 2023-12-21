@@ -9,7 +9,7 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleUpLikeBlog }) => {
   const [viewDetailVisible, setViewDetailVisible] = useState(false)
   const hideWhenDetailVisible = viewDetailVisible
     ? { display: 'none' }
@@ -33,19 +33,30 @@ const Blog = ({ blog }) => {
       >
         hide
       </button>
-      <BlogDetail blog={blog} visible={showWhenDetailVisible} />
+      <BlogDetail
+        blog={blog}
+        visible={showWhenDetailVisible}
+        handleUpLikeBlog={handleUpLikeBlog}
+      />
     </div>
   )
 }
 
-const BlogDetail = ({ blog, visible }) => {
+const BlogDetail = ({ blog, visible, handleUpLikeBlog }) => {
   return (
     <Fragment>
       <div style={visible}>
         <ul>
           <li>URL: {blog.url}</li>
           <li>
-            Likes: {blog.likes} <button>like</button>
+            Likes: {blog.likes}{' '}
+            <button
+              onClick={(event) => {
+                handleUpLikeBlog(event, blog)
+              }}
+            >
+              like
+            </button>
           </li>
           <li>Admin: {blog.user.name}</li>
         </ul>
