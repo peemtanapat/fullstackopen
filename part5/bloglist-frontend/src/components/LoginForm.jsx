@@ -30,12 +30,6 @@ const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
       </Fragment>
     )
   }
-
-  return (
-    <form onSubmit={handleLogout}>
-      <button type="submit">Logout</button>
-    </form>
-  )
 }
 
 LoginForm.propTypes = {
