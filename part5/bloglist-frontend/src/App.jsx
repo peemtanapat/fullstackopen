@@ -22,9 +22,6 @@ const App = () => {
   })
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [createdBlog, setCreatedBlog] = useState(null)
   const [updatedBlog, setUpdatedBlog] = useState(null)
   const [deletedBlog, setDeletedBlog] = useState(null)
@@ -83,14 +80,7 @@ const App = () => {
     resetUser()
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-    const newBlog = {
-      title,
-      author,
-      url,
-    }
-
+  const handleCreateBlog = async ({ newBlog }) => {
     try {
       const createdBlog = await blogService.create({ newBlog })
       if (createdBlog.id) {
@@ -109,6 +99,9 @@ const App = () => {
         )}`,
         isError: true,
       })
+      setTimeout(() => {
+        setNotificationMsg({ msg: '' })
+      }, 5000)
     }
   }
 
@@ -135,11 +128,13 @@ const App = () => {
         )}`,
         isError: true,
       })
+      setTimeout(() => {
+        setNotificationMsg({ msg: '' })
+      }, 5000)
     }
   }
 
   const handleDeleteBlog = async (event, toDeleteBlog) => {
-    console.log('%c⧭', 'color: #f200e2', { toDeleteBlog })
     event.preventDefault()
 
     const confirmMessage = `Remove blog ${toDeleteBlog.title} by ${toDeleteBlog.author}`
@@ -158,6 +153,9 @@ const App = () => {
           )}`,
           isError: true,
         })
+        setTimeout(() => {
+          setNotificationMsg({ msg: '' })
+        }, 5000)
       }
     }
   }
@@ -184,9 +182,6 @@ const App = () => {
 
           <BlogForm
             handleCreateBlog={handleCreateBlog}
-            setTitle={setTitle}
-            setAuthor={setAuthor}
-            setUrl={setUrl}
             createBlogVisible={createBlogVisible}
             setCreateBlogVisible={setCreateBlogVisible}
           />

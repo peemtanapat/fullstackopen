@@ -33,12 +33,14 @@ const Blog = ({ blog, handleUpLikeBlog, handleDeleteBlog }) => {
       >
         hide
       </button>
-      <BlogDetail
-        blog={blog}
-        visible={showWhenDetailVisible}
-        handleUpLikeBlog={handleUpLikeBlog}
-        handleDeleteBlog={handleDeleteBlog}
-      />
+      {viewDetailVisible && (
+        <BlogDetail
+          blog={blog}
+          visible={showWhenDetailVisible}
+          handleUpLikeBlog={handleUpLikeBlog}
+          handleDeleteBlog={handleDeleteBlog}
+        />
+      )}
     </div>
   )
 }
