@@ -1,10 +1,13 @@
 import Blog from './Blog'
-import LogoutForm from './LogoutForm'
+
+const sortBlogFn = (blogA, blogB) => {
+  return blogB.likes - blogA.likes
+}
 
 const Blogs = ({ blogs, user, handleUpLikeBlog }) => (
   <div>
     <br />
-    {blogs.map((blog) => (
+    {blogs.sort(sortBlogFn).map((blog) => (
       <Blog key={blog.id} blog={blog} handleUpLikeBlog={handleUpLikeBlog} />
     ))}
   </div>
