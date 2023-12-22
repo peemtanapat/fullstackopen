@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import PropTypes from 'prop-types'
 
 const BlogForm = ({
   handleCreateBlog,
@@ -52,6 +53,15 @@ const BlogForm = ({
       </div>
     </Fragment>
   )
+}
+
+BlogForm.propTypes = {
+  handleCreateBlog: PropTypes.func.isRequired,
+  setTitle: PropTypes.func.isRequired,
+  setAuthor: PropTypes.func.isRequired,
+  setUrl: PropTypes.func.isRequired,
+  createBlogVisible: PropTypes.bool.isRequired,
+  setCreateBlogVisible: PropTypes.func.isRequired,
 }
 
 export default BlogForm

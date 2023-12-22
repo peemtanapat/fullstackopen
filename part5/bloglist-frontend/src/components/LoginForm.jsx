@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
   if (user === null) {
@@ -35,6 +36,12 @@ const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
       <button type="submit">Logout</button>
     </form>
   )
+}
+
+LoginForm.propTypes = {
+  handleLogin: PropTypes.func.isRequired,
+  setUsername: PropTypes.func.isRequired,
+  setPassword: PropTypes.func.isRequired,
 }
 
 export default LoginForm
