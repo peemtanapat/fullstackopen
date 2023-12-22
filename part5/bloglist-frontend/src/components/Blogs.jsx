@@ -4,11 +4,16 @@ const sortBlogFn = (blogA, blogB) => {
   return blogB.likes - blogA.likes
 }
 
-const Blogs = ({ blogs, user, handleUpLikeBlog }) => (
+const Blogs = ({ blogs, user, handleUpLikeBlog, handleDeleteBlog }) => (
   <div>
     <br />
     {blogs.sort(sortBlogFn).map((blog) => (
-      <Blog key={blog.id} blog={blog} handleUpLikeBlog={handleUpLikeBlog} />
+      <Blog
+        key={blog.id}
+        blog={blog}
+        handleUpLikeBlog={handleUpLikeBlog}
+        handleDeleteBlog={handleDeleteBlog}
+      />
     ))}
   </div>
 )

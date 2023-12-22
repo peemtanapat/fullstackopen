@@ -27,12 +27,13 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [createdBlog, setCreatedBlog] = useState(null)
   const [updatedBlog, setUpdatedBlog] = useState(null)
+  const [deletedBlog, setDeletedBlog] = useState(null)
 
   const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [createdBlog, updatedBlog])
+  }, [createdBlog, updatedBlog, deletedBlog])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(LOGGED_BLOG_APP_USER)
@@ -111,13 +112,13 @@ const App = () => {
     }
   }
 
-  const handleUpLikeBlog = async (event, updatedBlog) => {
+  const handleUpLikeBlog = async (event, toUpdateBlog) => {
     event.preventDefault()
 
     const updatedLikeBlog = {
-      ...updatedBlog,
-      likes: updatedBlog.likes + 1,
-      user: updatedBlog.user.id,
+      ...toUpdateBlog,
+      likes: toUpdateBlog.likes + 1,
+      user: toUpdateBlog.user.id,
     }
 
     try {
@@ -134,6 +135,30 @@ const App = () => {
         )}`,
         isError: true,
       })
+    }
+  }
+
+  const handleDeleteBlog = async (event, toDeleteBlog) => {
+    console.log('%c⧭', 'color: #f200e2', { toDeleteBlog })
+    event.preventDefault()
+
+    const confirmMessage = `Remove blog ${toDeleteBlog.title} by ${toDeleteBlog.author}`
+    if (window.confirm(confirmMessage)) {
+      try {
+        const deletedBlog = await blogService.deleteBlog({
+          blogId: toDeleteBlog.id,
+        })
+        setDeletedBlog(deletedBlog)
+      } catch (error) {
+        setNotificationMsg({
+          msg: `Delete blog error: ${pathOr(
+            error.message,
+            'response.data.error'.split('.'),
+            error,
+          )}`,
+          isError: true,
+        })
+      }
     }
   }
 
@@ -172,6 +197,7 @@ const App = () => {
             handleLogout={handleLogout}
             handleCreateBlog={handleCreateBlog}
             handleUpLikeBlog={handleUpLikeBlog}
+            handleDeleteBlog={handleDeleteBlog}
           />
         </Fragment>
       )}

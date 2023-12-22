@@ -9,7 +9,7 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog, handleUpLikeBlog }) => {
+const Blog = ({ blog, handleUpLikeBlog, handleDeleteBlog }) => {
   const [viewDetailVisible, setViewDetailVisible] = useState(false)
   const hideWhenDetailVisible = viewDetailVisible
     ? { display: 'none' }
@@ -37,12 +37,13 @@ const Blog = ({ blog, handleUpLikeBlog }) => {
         blog={blog}
         visible={showWhenDetailVisible}
         handleUpLikeBlog={handleUpLikeBlog}
+        handleDeleteBlog={handleDeleteBlog}
       />
     </div>
   )
 }
 
-const BlogDetail = ({ blog, visible, handleUpLikeBlog }) => {
+const BlogDetail = ({ blog, visible, handleUpLikeBlog, handleDeleteBlog }) => {
   return (
     <Fragment>
       <div style={visible}>
@@ -60,8 +61,21 @@ const BlogDetail = ({ blog, visible, handleUpLikeBlog }) => {
           </li>
           <li>Admin: {blog.user.name}</li>
         </ul>
+        <RemoveBlogButton blog={blog} handleDeleteBlog={handleDeleteBlog} />
       </div>
     </Fragment>
+  )
+}
+
+const RemoveBlogButton = ({ blog, handleDeleteBlog }) => {
+  return (
+    <form
+      onSubmit={(event) => {
+        handleDeleteBlog(event, blog)
+      }}
+    >
+      <button type="submit">remove</button>
+    </form>
   )
 }
 

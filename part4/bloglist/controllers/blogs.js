@@ -71,7 +71,7 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized: not the creator' })
   }
 
-  const result = await Blog.findOneAndDelete(id)
+  const result = await Blog.findOneAndDelete({ _id: id })
   return res.json(result)
 })
 
