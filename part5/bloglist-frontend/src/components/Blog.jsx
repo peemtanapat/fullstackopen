@@ -1,5 +1,5 @@
-import React from 'react'
-import { Fragment, useState } from 'react'
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
 
 const blogStyle = {
   paddingTop: 10,
@@ -9,7 +9,7 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog, handleUpLikeBlog, handleDeleteBlog }) => {
+const Blog = ({ blog, loggedUser, handleUpLikeBlog, handleDeleteBlog }) => {
   const [viewDetailVisible, setViewDetailVisible] = useState(false)
   const hideWhenDetailVisible = viewDetailVisible
     ? { display: 'none' }
@@ -20,9 +20,12 @@ const Blog = ({ blog, handleUpLikeBlog, handleDeleteBlog }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} by {blog.author}
+      <span data-cy="blog-headline">
+        {blog.title} by {blog.author}
+      </span>
       <button
         style={hideWhenDetailVisible}
+        data-cy="button-view-blog"
         onClick={() => setViewDetailVisible(true)}
       >
         view
@@ -36,6 +39,7 @@ const Blog = ({ blog, handleUpLikeBlog, handleDeleteBlog }) => {
       {viewDetailVisible && (
         <BlogDetail
           blog={blog}
+          loggedUser={loggedUser}
           visible={showWhenDetailVisible}
           handleUpLikeBlog={handleUpLikeBlog}
           handleDeleteBlog={handleDeleteBlog}
@@ -45,27 +49,35 @@ const Blog = ({ blog, handleUpLikeBlog, handleDeleteBlog }) => {
   )
 }
 
-const BlogDetail = ({ blog, visible, handleUpLikeBlog, handleDeleteBlog }) => {
+const BlogDetail = ({
+  blog,
+  loggedUser,
+  visible,
+  handleUpLikeBlog,
+  handleDeleteBlog,
+}) => {
   return (
-    <Fragment>
-      <div style={visible}>
-        <ul>
-          <li>URL: {blog.url}</li>
-          <li>
-            Likes: {blog.likes}{' '}
-            <button
-              onClick={(event) => {
-                handleUpLikeBlog(event, blog)
-              }}
-            >
-              like
-            </button>
-          </li>
-          <li>Admin: {blog.user.name}</li>
-        </ul>
+    <div style={visible} data-cy='blog-detail'>
+      <ul>
+        <li>URL: {blog.url}</li>
+        <li data-cy="blog-like-info">
+          Likes: {blog.likes}{' '}
+          <button
+            data-cy="button-like-blog"
+            onClick={(event) => {
+              handleUpLikeBlog(event, blog)
+            }}
+          >
+            like
+          </button>
+        </li>
+        <li>Admin: {blog.user.name}</li>
+      </ul>
+
+      {blogService.isBlogOwner({ loggedUser, blog }) && (
         <RemoveBlogButton blog={blog} handleDeleteBlog={handleDeleteBlog} />
-      </div>
-    </Fragment>
+      )}
+    </div>
   )
 }
 
@@ -76,7 +88,9 @@ const RemoveBlogButton = ({ blog, handleDeleteBlog }) => {
         handleDeleteBlog(event, blog)
       }}
     >
-      <button type="submit">remove</button>
+      <button type="submit" data-cy="button-remove-blog">
+        remove
+      </button>
     </form>
   )
 }

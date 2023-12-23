@@ -176,7 +176,7 @@ const App = () => {
       )}
       {user && (
         <Fragment>
-          <h2>Blogs&#39;s {user.name}</h2>
+          <h2>Blog&#39;s {user.name}</h2>
 
           <LogoutForm user={user} handleLogout={handleLogout} />
 
@@ -188,7 +188,7 @@ const App = () => {
 
           <Blogs
             blogs={blogs}
-            user={user}
+            loggedUser={user}
             handleLogout={handleLogout}
             handleCreateBlog={handleCreateBlog}
             handleUpLikeBlog={handleUpLikeBlog}

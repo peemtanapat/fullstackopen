@@ -43,4 +43,8 @@ const deleteBlog = async ({ blogId }) => {
   return res.data
 }
 
-export default { getAll, create, update, deleteBlog, setToken }
+const isBlogOwner = ({ loggedUser, blog }) => {
+  return loggedUser.username === blog.user.username
+}
+
+export default { getAll, create, update, deleteBlog, setToken, isBlogOwner }

@@ -29,6 +29,7 @@ const BlogForm = ({
       <div style={hideWhenVisible}>
         <button
           data-testid="button-new-blog"
+          data-cy="button-new-blog"
           onClick={() => setCreateBlogVisible(true)}
         >
           new blog
@@ -43,6 +44,7 @@ const BlogForm = ({
             id="title"
             name="title"
             data-testid="input-title"
+            data-cy="input-title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
           />
@@ -54,6 +56,7 @@ const BlogForm = ({
             id="author"
             name="author"
             data-testid="input-author"
+            data-cy="input-author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
           />
@@ -65,11 +68,16 @@ const BlogForm = ({
             id="url"
             name="url"
             data-testid="input-url"
+            data-cy="input-url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
           />
           <br />
-          <button type="submit" data-testid="button-submit-blog">
+          <button
+            type="submit"
+            data-testid="button-submit-blog"
+            data-cy="button-submit-blog"
+          >
             Create
           </button>
         </form>
@@ -81,9 +89,6 @@ const BlogForm = ({
 
 BlogForm.propTypes = {
   handleCreateBlog: PropTypes.func.isRequired,
-  setTitle: PropTypes.func.isRequired,
-  setAuthor: PropTypes.func.isRequired,
-  setUrl: PropTypes.func.isRequired,
   createBlogVisible: PropTypes.bool.isRequired,
   setCreateBlogVisible: PropTypes.func.isRequired,
 }

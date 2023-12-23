@@ -13,8 +13,8 @@ h1 {
 }
 
 .notice .success {
-  color: green;
+  color: rgb(0, 128, 0);
 }
 .notice .error {
-  color: red;
+  color: rgb(255, 0, 0);
 }

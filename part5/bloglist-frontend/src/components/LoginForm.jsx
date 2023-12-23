@@ -13,6 +13,7 @@ const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
             type="text"
             id="username"
             name="username"
+            data-cy="username"
             onChange={({ target }) => setUsername(target.value)}
           />
           <br />
@@ -22,10 +23,13 @@ const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
             type="text"
             id="password"
             name="password"
+            data-cy="password"
             onChange={({ target }) => setPassword(target.value)}
           />
           <br />
-          <button type="submit">Login</button>
+          <button type="submit" data-cy="login-submit">
+            Login
+          </button>
         </form>
       </Fragment>
     )
