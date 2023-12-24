@@ -27,7 +27,6 @@ const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case VOTE:
-      console.log('action.payload', action.payload);
       const selectedId = action.payload.id;
       return state.map((item) => {
         if (item.id === selectedId) {
