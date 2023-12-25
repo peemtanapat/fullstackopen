@@ -1,9 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { addNewAnecdote, voteAnecdote } from './reducers/anecdoteReducer';
+import { pushNotification } from './reducers/notificationReducer';
 import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 
 // ordered by the number of votes
 const sortAnecdoteFn = (a, b) => {
@@ -12,33 +14,48 @@ const sortAnecdoteFn = (a, b) => {
 
 const App = () => {
   const anecdotes = useSelector(({ anecdotes, filter }) => {
-    let anecdoteList = anecdotes;
+    let anecdoteList = [...anecdotes];
 
     if (filter) {
-      anecdoteList = anecdotes.filter((item) =>
+      anecdoteList = anecdoteList.filter((item) =>
         item.content.toLowerCase().includes(filter.toLowerCase())
       );
     }
 
-    return anecdoteList.sort(sortAnecdoteFn);
+    anecdoteList.sort(sortAnecdoteFn);
+    return anecdoteList;
   });
   const [newAnecdote, setNewAnecdote] = useState('');
   const dispatch = useDispatch();
 
-  const vote = (id) => {
+  const resetNotification = () => {
+    setTimeout(() => {
+      dispatch(pushNotification(''));
+    }, 5000);
+  };
+
+  const vote = (id, content) => {
     console.log('vote', id);
     dispatch(voteAnecdote(id));
+    dispatch(pushNotification(`You voted '${content}'`));
+    resetNotification();
   };
 
   const add = (event) => {
     event.preventDefault();
 
     dispatch(addNewAnecdote(newAnecdote));
+    dispatch(pushNotification(`Added '${newAnecdote}'`));
+    resetNotification();
   };
 
   return (
     <div>
       <h2>Anecdotes</h2>
+
+      <Notification />
+
+      <br />
 
       <Filter />
 

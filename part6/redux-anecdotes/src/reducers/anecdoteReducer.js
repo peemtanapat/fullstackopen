@@ -1,4 +1,5 @@
-import { ADD, VOTE } from '../constant/constant';
+import { createSlice } from '@reduxjs/toolkit';
+import { ANECDOTES } from '../constant/constant';
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -21,44 +22,68 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state);
-  console.log('action', action);
-
-  switch (action.type) {
-    case VOTE:
-      const selectedId = action.payload.id;
+// ** Change the definition of the filter reducer and action creators
+// ** to use the Redux Toolkit's createSlice function.
+const anecdoteSlice = createSlice({
+  name: ANECDOTES,
+  initialState,
+  reducers: {
+    voteAnecdote(state, action) {
+      console.log('voteAnecdote', { state, action });
+      const selectedId = action.payload;
       return state.map((item) => {
         if (item.id === selectedId) {
           return { ...item, votes: item.votes + 1 };
         }
         return item;
       });
-    case ADD:
-      return state.concat(asObject(action.payload.content));
-    default:
-      return state;
-  }
-};
-
-// *** action creators ***
-export const voteAnecdote = (id) => {
-  return {
-    type: VOTE,
-    payload: {
-      id,
     },
-  };
-};
-
-export const addNewAnecdote = (content) => {
-  return {
-    type: ADD,
-    payload: {
-      content,
+    addNewAnecdote(state, action) {
+      console.log('addNewAnecdote', { state, action });
+      return state.concat(asObject(action.payload));
     },
-  };
-};
-// *** action creators ***
+  },
+});
 
-export default reducer;
+export const { addNewAnecdote, voteAnecdote } = anecdoteSlice.actions;
+export default anecdoteSlice.reducer;
+
+// ** Traditional Reducer **
+// const reducer = (state = initialState, action) => {
+//   console.log('state now: ', state);
+//   console.log('action', action);
+
+//   switch (action.type) {
+//     case VOTE:
+//       const selectedId = action.payload.id;
+//       return state.map((item) => {
+//         if (item.id === selectedId) {
+//           return { ...item, votes: item.votes + 1 };
+//         }
+//         return item;
+//       });
+//     case ADD:
+//       return state.concat(asObject(action.payload.content));
+//     default:
+//       return state;
+//   }
+// };
+
+// ** Action creators **
+// export const voteAnecdote = (id) => {
+//   return {
+//     type: `${ANECDOTES}/${VOTE}`,
+//     payload: {
+//       id,
+//     },
+//   };
+// };
+
+// export const addNewAnecdote = (content) => {
+//   return {
+//     type: `${ANECDOTES}/${ADD}`,
+//     payload: {
+//       content,
+//     },
+//   };
+// };

@@ -1,10 +1,15 @@
-const filterReducer = (state = '', action) => {
-  console.log('%c⧭', 'color: #00a3cc', { state, payload: action.payload });
-  if (action.type === 'FILTER') {
-    return action.payload;
-  }
-  return state;
-};
+import { createSlice } from '@reduxjs/toolkit';
+import { FILTER } from '../constant/constant';
+
+const filterSlice = createSlice({
+  name: FILTER,
+  initialState: '',
+  reducers: {
+    doFilter(state, action) {
+      return action.payload;
+    },
+  },
+});
 
 export const filterChange = (filter) => {
   return {
@@ -13,4 +18,6 @@ export const filterChange = (filter) => {
   };
 };
 
-export default filterReducer;
+export const { doFilter } = filterSlice.actions;
+
+export default filterSlice.reducer;
