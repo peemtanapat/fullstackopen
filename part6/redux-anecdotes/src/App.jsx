@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { addNewAnecdote, voteAnecdote } from './reducers/anecdoteReducer';
 import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
+import Filter from './components/Filter';
 
 // ordered by the number of votes
 const sortAnecdoteFn = (a, b) => {
@@ -10,7 +11,17 @@ const sortAnecdoteFn = (a, b) => {
 };
 
 const App = () => {
-  const anecdotes = useSelector((state) => state.sort(sortAnecdoteFn));
+  const anecdotes = useSelector(({ anecdotes, filter }) => {
+    let anecdoteList = anecdotes;
+
+    if (filter) {
+      anecdoteList = anecdotes.filter((item) =>
+        item.content.toLowerCase().includes(filter.toLowerCase())
+      );
+    }
+
+    return anecdoteList.sort(sortAnecdoteFn);
+  });
   const [newAnecdote, setNewAnecdote] = useState('');
   const dispatch = useDispatch();
 
@@ -29,8 +40,10 @@ const App = () => {
     <div>
       <h2>Anecdotes</h2>
 
+      <Filter />
+
       <AnecdoteList anecdotes={anecdotes} vote={vote} />
-      
+
       <AnecdoteForm add={add} setNewAnecdote={setNewAnecdote} />
     </div>
   );
