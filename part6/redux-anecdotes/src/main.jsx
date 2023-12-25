@@ -1,5 +1,4 @@
 import ReactDOM from 'react-dom/client';
-// import { combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from './App';
 import anecdoteReducer from './reducers/anecdoteReducer';
@@ -7,7 +6,8 @@ import filterReducer from './reducers/filterReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import notificationReducer from './reducers/notificationReducer';
 
-// * without redux toolkit
+// * with redux native
+// import { combineReducers, createStore } from 'redux';
 // const reducer = combineReducers({
 //   anecdotes: anecdoteReducer,
 //   filter: filterReducer,
