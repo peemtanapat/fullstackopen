@@ -26,7 +26,7 @@ const initialState = anecdotesAtStart.map(asObject);
 // ** to use the Redux Toolkit's createSlice function.
 const anecdoteSlice = createSlice({
   name: ANECDOTES,
-  initialState,
+  initialState: [],
   reducers: {
     voteAnecdote(state, action) {
       console.log('voteAnecdote', { state, action });
@@ -42,10 +42,15 @@ const anecdoteSlice = createSlice({
       console.log('addNewAnecdote', { state, action });
       return state.concat(asObject(action.payload));
     },
+    setAnecdoteList(state, action) {
+      console.log('setAnecdoteList', { state, action });
+      return action.payload;
+    },
   },
 });
 
-export const { addNewAnecdote, voteAnecdote } = anecdoteSlice.actions;
+export const { addNewAnecdote, voteAnecdote, setAnecdoteList } =
+  anecdoteSlice.actions;
 export default anecdoteSlice.reducer;
 
 // ** Traditional Reducer **

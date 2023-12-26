@@ -1,11 +1,16 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useState } from 'react';
-import { addNewAnecdote, voteAnecdote } from './reducers/anecdoteReducer';
+import { useEffect, useState } from 'react';
+import {
+  addNewAnecdote,
+  setAnecdoteList,
+  voteAnecdote,
+} from './reducers/anecdoteReducer';
 import { pushNotification } from './reducers/notificationReducer';
 import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
+import { getAnecdoteList } from './services/anecdote';
 
 // ordered by the number of votes
 const sortAnecdoteFn = (a, b) => {
@@ -13,6 +18,19 @@ const sortAnecdoteFn = (a, b) => {
 };
 
 const App = () => {
+  const [newAnecdote, setNewAnecdote] = useState('');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getAnecdoteListFn = async () => {
+      const anecdoteList = await getAnecdoteList();
+
+      dispatch(setAnecdoteList(anecdoteList));
+    };
+
+    getAnecdoteListFn();
+  }, []);
+
   const anecdotes = useSelector(({ anecdotes, filter }) => {
     let anecdoteList = [...anecdotes];
 
@@ -25,8 +43,6 @@ const App = () => {
     anecdoteList.sort(sortAnecdoteFn);
     return anecdoteList;
   });
-  const [newAnecdote, setNewAnecdote] = useState('');
-  const dispatch = useDispatch();
 
   const resetNotification = () => {
     setTimeout(() => {
