@@ -10,7 +10,7 @@ import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
-import { getAnecdoteList } from './services/anecdote';
+import { createAnecdote, getAnecdoteList } from './services/anecdote';
 
 // ordered by the number of votes
 const sortAnecdoteFn = (a, b) => {
@@ -57,9 +57,10 @@ const App = () => {
     resetNotification();
   };
 
-  const add = (event) => {
+  const add = async (event) => {
     event.preventDefault();
 
+    await createAnecdote(newAnecdote);
     dispatch(addNewAnecdote(newAnecdote));
     dispatch(pushNotification(`Added '${newAnecdote}'`));
     resetNotification();
