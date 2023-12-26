@@ -1,19 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  addNewAnecdote,
   addNewAnecdoteAction,
   initializeAnecdoteList,
-  setAnecdoteList,
-  voteAnecdote,
   voteAnecdoteAction,
 } from './reducers/anecdoteReducer';
-import { pushNotification } from './reducers/notificationReducer';
 import AnecdoteForm from './components/AnecdoteForm';
 import AnecdoteList from './components/AnecdoteList';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
-import { createAnecdote, getAnecdoteList } from './services/anecdote';
 
 // ordered by the number of votes
 const sortAnecdoteFn = (a, b) => {
@@ -23,13 +18,17 @@ const sortAnecdoteFn = (a, b) => {
 const App = () => {
   const [newAnecdote, setNewAnecdote] = useState('');
   const dispatch = useDispatch();
+  const rawAnecdotes = useSelector((state) => state.anecdotes);
+  const filter = useSelector((state) => state.filter);
 
   useEffect(() => {
     dispatch(initializeAnecdoteList());
   }, []);
 
-  const anecdotes = useSelector(({ anecdotes, filter }) => {
-    let anecdoteList = [...anecdotes];
+  const finalAnecdotes = useMemo(() => {
+    if (!rawAnecdotes) return [];
+
+    let anecdoteList = [...rawAnecdotes];
 
     if (filter) {
       anecdoteList = anecdoteList.filter((item) =>
@@ -39,26 +38,16 @@ const App = () => {
 
     anecdoteList.sort(sortAnecdoteFn);
     return anecdoteList;
-  });
+  }, [rawAnecdotes, filter]);
 
-  const resetNotification = () => {
-    setTimeout(() => {
-      dispatch(pushNotification(''));
-    }, 5000);
-  };
-
-  const vote = (id, content) => {
-    dispatch(voteAnecdoteAction(id, content));
-
-    resetNotification();
+  const vote = (anecdote) => {
+    dispatch(voteAnecdoteAction(anecdote));
   };
 
   const add = async (event) => {
     event.preventDefault();
 
     dispatch(addNewAnecdoteAction(newAnecdote));
-
-    resetNotification();
   };
 
   return (
@@ -71,7 +60,7 @@ const App = () => {
 
       <Filter />
 
-      <AnecdoteList anecdotes={anecdotes} vote={vote} />
+      <AnecdoteList anecdotes={finalAnecdotes} vote={vote} />
 
       <AnecdoteForm add={add} setNewAnecdote={setNewAnecdote} />
     </div>

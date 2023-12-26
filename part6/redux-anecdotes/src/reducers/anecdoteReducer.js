@@ -1,16 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ANECDOTES } from '../constant/constant';
 import { logAction } from '../utils/logger';
-import { createAnecdote, getAnecdoteList } from '../services/anecdote';
+import {
+  createAnecdote,
+  getAnecdoteList,
+  upVoteAnecdote,
+} from '../services/anecdote';
+import { setNotification } from './notificationReducer';
 
-const anecdotesAtStart = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
-];
+// const anecdotesAtStart = [
+//   'If it hurts, do it more often',
+//   'Adding manpower to a late software project makes it later!',
+//   'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+//   'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+//   'Premature optimization is the root of all evil.',
+//   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+// ];
 
 const getId = () => (100000 * Math.random()).toFixed(0);
 
@@ -22,7 +27,7 @@ export const asObject = (anecdote) => {
   };
 };
 
-const initialState = anecdotesAtStart.map(asObject);
+// const initialState = anecdotesAtStart.map(asObject);
 
 // ** Change the definition of the filter reducer and action creators
 // ** to use the Redux Toolkit's createSlice function.
@@ -32,9 +37,10 @@ const anecdoteSlice = createSlice({
   reducers: {
     voteAnecdote(state, action) {
       logAction('voteAnecdote', state, action);
-      const selectedId = action.payload;
+      const anecdote = action.payload;
+      console.log('%c⧭', 'color: #007300', { anecdote });
       return state.map((item) => {
-        if (item.id === selectedId) {
+        if (item.id === anecdote.id) {
           return { ...item, votes: item.votes + 1 };
         }
         return item;
@@ -66,18 +72,25 @@ export const initializeAnecdoteList = () => {
 export const addNewAnecdoteAction = (newAnecdote) => {
   return async (dispatch) => {
     await createAnecdote(newAnecdote);
+
     dispatch(addNewAnecdote(newAnecdote));
-    dispatch(pushNotification(`Added '${newAnecdote}'`));
+
+    dispatch(setNotification(`Added '${newAnecdote}'`, 5));
   };
 };
 
-export const voteAnecdoteAction = (id, content) => {
-  console.log('vote', id);
+export const voteAnecdoteAction = (anecdote) => {
+  return async (dispatch) => {
+    const { id, content } = anecdote;
 
-  // TODO: Voting does save changes to the backend
+    console.log('vote', id);
 
-  dispatch(voteAnecdote(id));
-  dispatch(pushNotification(`You voted '${content}'`));
+    await upVoteAnecdote(anecdote);
+
+    dispatch(voteAnecdote(anecdote));
+
+    dispatch(setNotification(`You voted '${content}'`, 10));
+  };
 };
 // ** redux-thunk **
 
