@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ANECDOTES } from '../constant/constant';
 import { logAction } from '../utils/logger';
+import { createAnecdote, getAnecdoteList } from '../services/anecdote';
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -52,6 +53,34 @@ const anecdoteSlice = createSlice({
 
 export const { addNewAnecdote, voteAnecdote, setAnecdoteList } =
   anecdoteSlice.actions;
+
+// ** redux-thunk **
+export const initializeAnecdoteList = () => {
+  return async (dispatch) => {
+    const anecdoteList = await getAnecdoteList();
+
+    dispatch(setAnecdoteList(anecdoteList));
+  };
+};
+
+export const addNewAnecdoteAction = (newAnecdote) => {
+  return async (dispatch) => {
+    await createAnecdote(newAnecdote);
+    dispatch(addNewAnecdote(newAnecdote));
+    dispatch(pushNotification(`Added '${newAnecdote}'`));
+  };
+};
+
+export const voteAnecdoteAction = (id, content) => {
+  console.log('vote', id);
+
+  // TODO: Voting does save changes to the backend
+
+  dispatch(voteAnecdote(id));
+  dispatch(pushNotification(`You voted '${content}'`));
+};
+// ** redux-thunk **
+
 export default anecdoteSlice.reducer;
 
 // ** Traditional Reducer **

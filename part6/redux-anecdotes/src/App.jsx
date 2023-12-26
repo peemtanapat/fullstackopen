@@ -2,8 +2,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import {
   addNewAnecdote,
+  addNewAnecdoteAction,
+  initializeAnecdoteList,
   setAnecdoteList,
   voteAnecdote,
+  voteAnecdoteAction,
 } from './reducers/anecdoteReducer';
 import { pushNotification } from './reducers/notificationReducer';
 import AnecdoteForm from './components/AnecdoteForm';
@@ -22,13 +25,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getAnecdoteListFn = async () => {
-      const anecdoteList = await getAnecdoteList();
-
-      dispatch(setAnecdoteList(anecdoteList));
-    };
-
-    getAnecdoteListFn();
+    dispatch(initializeAnecdoteList());
   }, []);
 
   const anecdotes = useSelector(({ anecdotes, filter }) => {
@@ -51,18 +48,16 @@ const App = () => {
   };
 
   const vote = (id, content) => {
-    console.log('vote', id);
-    dispatch(voteAnecdote(id));
-    dispatch(pushNotification(`You voted '${content}'`));
+    dispatch(voteAnecdoteAction(id, content));
+
     resetNotification();
   };
 
   const add = async (event) => {
     event.preventDefault();
 
-    await createAnecdote(newAnecdote);
-    dispatch(addNewAnecdote(newAnecdote));
-    dispatch(pushNotification(`Added '${newAnecdote}'`));
+    dispatch(addNewAnecdoteAction(newAnecdote));
+
     resetNotification();
   };
 
