@@ -3,9 +3,9 @@ import { useField } from '../hooks'
 
 const CreateNew = ({ addNew, setNotification }) => {
   const navigate = useNavigate()
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
+  const content = useField('text', 'content')
+  const author = useField('text', 'author')
+  const info = useField('text', 'info')
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -25,25 +25,18 @@ const CreateNew = ({ addNew, setNotification }) => {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="content">content </label>
-          <input
-            name="content"
-            value={content.value}
-            onChange={content.onChange}
-          />
+          <input {...content} />
         </div>
         <div>
           <label htmlFor="author">author </label>
-          <input
-            name="author"
-            value={author.value}
-            onChange={author.onChange}
-          />
+          <input {...author} />
         </div>
         <div>
           <label htmlFor="info">url for more info </label>
-          <input name="info" value={info.value} onChange={info.onChange} />
+          <input {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset">reset</button>
       </form>
     </div>
   )
