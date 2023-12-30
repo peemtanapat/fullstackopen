@@ -37,19 +37,6 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
-  // const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
-
-  // const vote = (id) => {
-  //   const anecdote = anecdoteById(id)
-
-  //   const voted = {
-  //     ...anecdote,
-  //     votes: anecdote.votes + 1,
-  //   }
-
-  //   setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)))
-  // }
-
   return (
     <Fragment>
       <h1>Software anecdotes</h1>

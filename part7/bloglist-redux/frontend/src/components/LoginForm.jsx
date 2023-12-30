@@ -1,7 +1,20 @@
-import { Fragment } from 'react'
-import PropTypes from 'prop-types'
+import { Fragment, useState } from 'react'
+import { loginUser } from '../reducers/userReducer'
+import { useDispatch } from 'react-redux'
 
-const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
+const LoginForm = ({ user }) => {
+  const dispatch = useDispatch()
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    console.log('logging in with', username)
+
+    dispatch(loginUser({ username, password }))
+  }
+
   if (user === null) {
     return (
       <Fragment>
@@ -34,12 +47,6 @@ const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
       </Fragment>
     )
   }
-}
-
-LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  setPassword: PropTypes.func.isRequired,
 }
 
 export default LoginForm

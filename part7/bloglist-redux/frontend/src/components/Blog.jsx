@@ -57,7 +57,7 @@ const BlogDetail = ({
   handleDeleteBlog,
 }) => {
   return (
-    <div style={visible} data-cy='blog-detail'>
+    <div style={visible} data-cy="blog-detail">
       <ul>
         <li>URL: {blog.url}</li>
         <li data-cy="blog-like-info">

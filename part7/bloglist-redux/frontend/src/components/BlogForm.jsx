@@ -1,14 +1,15 @@
 import { Fragment, useState } from 'react'
-import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { createNewBlog } from '../reducers/blogListReducer'
 
-const BlogForm = ({
-  handleCreateBlog,
-  createBlogVisible,
-  setCreateBlogVisible,
-}) => {
+const BlogForm = () => {
+  const dispatch = useDispatch()
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [createBlogVisible, setCreateBlogVisible] = useState(false)
 
   const hideWhenVisible = { display: createBlogVisible ? 'none' : '' }
   const showWhenVisible = { display: createBlogVisible ? '' : 'none' }
@@ -20,7 +21,7 @@ const BlogForm = ({
       author,
       url,
     }
-    handleCreateBlog({ newBlog })
+    dispatch(createNewBlog(newBlog))
   }
 
   return (
@@ -85,12 +86,6 @@ const BlogForm = ({
       </div>
     </Fragment>
   )
-}
-
-BlogForm.propTypes = {
-  handleCreateBlog: PropTypes.func.isRequired,
-  createBlogVisible: PropTypes.bool.isRequired,
-  setCreateBlogVisible: PropTypes.func.isRequired,
 }
 
 export default BlogForm

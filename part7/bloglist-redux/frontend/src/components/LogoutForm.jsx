@@ -1,6 +1,19 @@
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { logoutUser } from '../reducers/userReducer'
 
-const LogoutForm = ({ user, handleLogout }) => {
+const LogoutForm = ({ user }) => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const handleLogout = (event) => {
+    event.preventDefault()
+
+    dispatch(logoutUser())
+    navigate('/')
+  }
+
   return (
     <form onSubmit={handleLogout}>
       <label>{user.name} logged in </label>
@@ -9,10 +22,6 @@ const LogoutForm = ({ user, handleLogout }) => {
       </button>
     </form>
   )
-}
-
-LogoutForm.propTypes = {
-  handleLogout: PropTypes.func.isRequired,
 }
 
 export default LogoutForm
