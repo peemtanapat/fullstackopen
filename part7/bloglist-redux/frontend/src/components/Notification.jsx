@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
-import '../css/index.css'
 import { useSelector } from 'react-redux'
+
+import '../css/index.css'
 
 const Notification = () => {
   const { message, isError } = useSelector((state) => state.notification)

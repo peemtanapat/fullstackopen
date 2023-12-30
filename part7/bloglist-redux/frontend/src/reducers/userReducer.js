@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import { LOGGED_BLOG_APP_USER, USER } from '../constant'
 import loginService from '../services/login'
 import blogListService from '../services/blogs'

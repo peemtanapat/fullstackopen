@@ -1,6 +1,6 @@
-import { NOTIFICATION } from '../constant'
-
 import { createSlice } from '@reduxjs/toolkit'
+
+import { NOTIFICATION } from '../constant'
 import { logAction } from '../utils/logger'
 
 const notificationSlice = createSlice({
