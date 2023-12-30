@@ -1,7 +1,10 @@
 import React, { Fragment } from 'react'
 import '../css/index.css'
+import { useSelector } from 'react-redux'
 
-const Notification = ({ message, isError }) => {
+const Notification = () => {
+  const { message, isError } = useSelector((state) => state.notification)
+
   if (!message) return <Fragment></Fragment>
 
   const msgClassType = isError ? 'error' : 'success'

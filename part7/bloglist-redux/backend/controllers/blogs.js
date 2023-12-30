@@ -28,21 +28,26 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
   const { title, author, url, likes, userId } = req.body
 
   const user = req.user
+  const userForReturn = {
+    username: user.username,
+    name: user.name,
+  }
 
-  const newBlog = new Blog({
+  const newBlogObj = {
     title,
     author,
     url,
     likes: likes || 0,
     user: user._id,
-  })
+  }
+
+  const newBlog = new Blog(newBlogObj)
 
   const savedBlog = await newBlog.save()
+
   user.blogs = user.blogs.concat(savedBlog._id)
 
-  user.save()
-
-  return res.status(201).json(savedBlog)
+  return res.status(201).json({ ...newBlogObj, user: userForReturn })
 })
 
 blogsRouter.put('/:id', userExtractor, async (req, res) => {

@@ -20,7 +20,7 @@ const LoginForm = ({ handleLogin, user, setUsername, setPassword }) => {
           <label htmlFor="password">Password:</label>
           <br />
           <input
-            type="text"
+            type="password"
             id="password"
             name="password"
             data-cy="password"

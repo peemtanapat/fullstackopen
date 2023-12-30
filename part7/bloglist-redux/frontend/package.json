@@ -17,11 +17,14 @@
     "testEnvironment": "jsdom"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
     "axios": "^1.4.0",
     "prop-types": "^15.8.1",
     "ramda": "^0.29.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.0.4",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.6",
