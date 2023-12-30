@@ -1,0 +1,20 @@
+h1 {
+  color: green;
+  font-style: italic;
+}
+
+.notice {
+  background: lightgray;
+  font-size: 16px;
+  border-style: hidden;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.notice .success {
+  color: rgb(0, 128, 0);
+}
+.notice .error {
+  color: rgb(255, 0, 0);
+}
