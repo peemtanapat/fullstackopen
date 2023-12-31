@@ -15,7 +15,7 @@ usersRouter.get('/:id', async (req, res) => {
   const foundUser = await user.findById(id).populate('blogs')
 
   if (foundUser) {
-    return res.json(user)
+    return res.json(foundUser)
   } else {
     return res.status(404).end()
   }
