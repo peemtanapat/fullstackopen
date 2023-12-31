@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
 
 const Blog = require('../models/blog')
-const logger = require('../utils/logger')
 const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', async (req, res) => {
@@ -46,6 +45,7 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
   const savedBlog = await newBlog.save()
 
   user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
   newBlogObj.id = savedBlog._id.toString()
 
   return res.status(201).json({ ...newBlogObj, user: userForReturn })
@@ -78,6 +78,10 @@ blogsRouter.delete('/:id', userExtractor, async (req, res) => {
   }
 
   const result = await Blog.findOneAndDelete({ _id: id })
+  // pull(remove) blog from user.blogs as well
+  user.blogs.pull(id)
+  await user.save()
+
   return res.json(result)
 })
 
