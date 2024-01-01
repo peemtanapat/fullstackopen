@@ -14,10 +14,13 @@ blogsRouter.get('/', async (req, res) => {
 
 blogsRouter.get('/:id', async (req, res) => {
   const id = req.params.id
-  const foundBlog = await Blog.findById(id)
+  const foundBlog = await Blog.findById(id).populate('user', {
+    username: 1,
+    name: 1,
+  })
 
   if (foundBlog) {
-    return res.json(Blog)
+    return res.json(foundBlog)
   } else {
     return res.status(404).end()
   }
@@ -52,15 +55,8 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
 })
 
 blogsRouter.put('/:id', userExtractor, async (req, res) => {
-  const user = req.user
   const id = req.params.id
   const updatedBlogInfo = req.body
-
-  const foundBlog = await Blog.findOne({ _id: id })
-
-  if (foundBlog.user.toString() !== user.id) {
-    return res.status(401).json({ error: 'Unauthorized: not the creator' })
-  }
 
   const result = await Blog.findOneAndUpdate({ _id: id }, updatedBlogInfo, {
     returnOriginal: false,
