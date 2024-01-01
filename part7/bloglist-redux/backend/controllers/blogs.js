@@ -27,7 +27,7 @@ blogsRouter.get('/:id', async (req, res) => {
 })
 
 blogsRouter.post('/', userExtractor, async (req, res) => {
-  const { title, author, url, likes, comments, userId } = req.body
+  const { title, author, url, likes, comments } = req.body
 
   const user = req.user
   const userForReturn = {
@@ -50,9 +50,28 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
 
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-  newBlogObj.id = savedBlog._id.toString()
 
-  return res.status(201).json({ ...newBlogObj, user: userForReturn })
+  newBlogObj.id = savedBlog._id.toString()
+  newBlogObj.user = userForReturn
+
+  return res.status(201).json(newBlogObj)
+})
+
+blogsRouter.post('/:id/comments', userExtractor, async (req, res) => {
+  const blogId = req.params.id
+  const newComment = req.body.comment
+
+  const targetBlog = await Blog.findById(blogId)
+
+  targetBlog.comments.push(newComment)
+  await targetBlog.save()
+
+  const updatedBlog = await Blog.findById(blogId).populate('user', {
+    username: 1,
+    name: 1,
+  })
+
+  return res.status(200).json(updatedBlog)
 })
 
 blogsRouter.put('/:id', userExtractor, async (req, res) => {

@@ -58,6 +58,31 @@ export const createNewBlog = (newBlog) => {
   }
 }
 
+export const addNewComment = (blog, comment) => {
+  return async (dispatch) => {
+    try {
+      await blogListService.addComment({ blog, comment })
+
+      dispatch(loadSingleBlog(blog.id))
+      dispatch(
+        pushNotification({
+          message: `comment added "${comment}"`,
+          isError: false,
+        }),
+      )
+    } catch (error) {
+      pushNotification({
+        message: `Adding comment error: ${pathOr(
+          error.message,
+          'response.data.error'.split('.'),
+          error,
+        )}`,
+        isError: true,
+      })
+    }
+  }
+}
+
 export const upLikeBlog = (blog, isSingleBlog = false) => {
   return async (dispatch) => {
     try {

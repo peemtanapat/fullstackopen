@@ -1,8 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteBlog, upLikeBlog } from '../reducers/blogListReducer'
+import {
+  addNewComment,
+  deleteBlog,
+  upLikeBlog,
+} from '../reducers/blogListReducer'
 import blogListService from '../services/blogs'
+import { UnorderedList } from './Custom'
 
 const blogStyle = {
   paddingTop: 10,
@@ -12,9 +17,7 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog, loggedUser }) => {
-  const dispatch = useDispatch()
-
+const Blog = () => {
   const params = useParams()
   const blogId = params.id
 
@@ -23,10 +26,6 @@ const Blog = ({ blog, loggedUser }) => {
   const [finalBlog, setFinalBlog] = useState(null)
 
   const blogs = useSelector((state) => state.blogList)
-
-  // const finalBlog = useMemo(() => {
-  //   return blogs.find((blog) => blog.id === blogId)
-  // }, [blogs])
 
   useEffect(() => {
     if (!finalBlog) {
@@ -75,6 +74,58 @@ const BlogDetail = ({ blog, loggedUser }) => {
       {blogListService.isBlogOwner({ loggedUser, blog }) && (
         <RemoveBlogButton blog={blog} />
       )}
+
+      <BlogComments blog={blog} />
+    </div>
+  )
+}
+
+const BlogCommentForm = ({ blog }) => {
+  const dispatch = useDispatch()
+  const [comment, setComment] = useState('')
+
+  const addComment = (event) => {
+    event.preventDefault()
+
+    dispatch(addNewComment(blog, comment))
+  }
+
+  return (
+    <div>
+      <form onSubmit={addComment}>
+        <label htmlFor="comment">Comment:</label>
+        <br />
+        <input
+          type="text"
+          id="comment"
+          name="comment"
+          data-testid="input-comment"
+          data-cy="input-comment"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+        />
+        <button
+          type="submit"
+          data-testid="button-submit-comment"
+          data-cy="button-submit-comment"
+        >
+          Add comment
+        </button>
+      </form>
+    </div>
+  )
+}
+
+const BlogComments = ({ blog }) => {
+  return (
+    <div>
+      <h2>Comments</h2>
+      <BlogCommentForm blog={blog} />
+      <UnorderedList>
+        {blog.comments.map((comment, index) => {
+          return <li key={index}>{comment}</li>
+        })}
+      </UnorderedList>
     </div>
   )
 }
