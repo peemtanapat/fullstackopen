@@ -27,7 +27,7 @@ blogsRouter.get('/:id', async (req, res) => {
 })
 
 blogsRouter.post('/', userExtractor, async (req, res) => {
-  const { title, author, url, likes, userId } = req.body
+  const { title, author, url, likes, comments, userId } = req.body
 
   const user = req.user
   const userForReturn = {
@@ -41,6 +41,7 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
     url,
     likes: likes || 0,
     user: user._id,
+    comments,
   }
 
   const newBlog = new Blog(newBlogObj)
