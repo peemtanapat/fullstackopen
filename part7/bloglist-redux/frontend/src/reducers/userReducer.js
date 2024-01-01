@@ -46,6 +46,7 @@ export const logoutUser = () => {
       blogListService.setToken(null)
       dispatch(setLoggedUser(null))
       window.localStorage.removeItem(LOGGED_BLOG_APP_USER)
+      dispatch(resetNotification(0.5))
     } catch (error) {
       dispatch(
         pushNotification({

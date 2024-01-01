@@ -70,6 +70,7 @@ export const addNewComment = (blog, comment) => {
           isError: false,
         }),
       )
+      dispatch(resetNotification())
     } catch (error) {
       pushNotification({
         message: `Adding comment error: ${pathOr(

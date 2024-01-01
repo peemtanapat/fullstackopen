@@ -3,6 +3,8 @@ import { loadUsersStat } from '../reducers/usersStatReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import useUserState from '../hooks/useUserState'
+import { NoAuthorization } from './ErrorPage'
 
 const BlogUser = () => {
   const dispatch = useDispatch()
@@ -12,8 +14,10 @@ const BlogUser = () => {
     dispatch(loadUsersStat())
   }, [blogs])
 
+  const user = useUserState()
   const usersStat = useSelector((state) => state.usersStat)
 
+  if (!user) return <NoAuthorization />
   if (!usersStat) return null
 
   return (

@@ -2,14 +2,14 @@ import { Fragment, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import BlogHeader from './BlogHeader'
+import useUserState from '../hooks/useUserState'
 
 const sortBlogFn = (blogA, blogB) => {
   return blogB.likes - blogA.likes
 }
 
-const Blogs = ({ loggedUser }) => {
-  const userState = useSelector((state) => state.user)
-  console.log('%c⧭', 'color: #7f7700', { loggedUser, userState })
+const Blogs = () => {
+  const user = useUserState()
 
   const blogs = useSelector((state) => state.blogList)
 
@@ -18,7 +18,7 @@ const Blogs = ({ loggedUser }) => {
     return copied.sort(sortBlogFn)
   }, [blogs])
 
-  if (!loggedUser) return null
+  if (!user) return null
   if (!blogs) return null
 
   return (

@@ -8,6 +8,7 @@ import {
 } from '../reducers/blogListReducer'
 import blogListService from '../services/blogs'
 import { UnorderedList } from './Custom'
+import useUserState from '../hooks/useUserState'
 
 const blogStyle = {
   paddingTop: 10,
@@ -21,7 +22,7 @@ const Blog = () => {
   const params = useParams()
   const blogId = params.id
 
-  const userState = useSelector((state) => state.user)
+  const user = useUserState()
   const singleBlog = useSelector((state) => state.singleBlog)
   const [finalBlog, setFinalBlog] = useState(null)
 
@@ -45,7 +46,7 @@ const Blog = () => {
           {finalBlog.title} by {finalBlog.author}
         </Link>
       </span>
-      <BlogDetail blog={finalBlog} loggedUser={userState} />
+      <BlogDetail blog={finalBlog} loggedUser={user} />
     </div>
   )
 }

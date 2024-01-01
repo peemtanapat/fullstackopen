@@ -4,17 +4,21 @@ import { useParams } from 'react-router-dom'
 import { loadUserInfo } from '../reducers/userInfoReducer'
 import BlogHeader from './BlogHeader'
 import { UnorderedList } from './Custom'
+import useUserState from '../hooks/useUserState'
 
 const UserBlogs = () => {
   const dispatch = useDispatch()
   const params = useParams()
   const userId = params.id
 
+  const user = useUserState()
   const userInfo = useSelector((state) => state.userInfo)
 
   useEffect(() => {
     dispatch(loadUserInfo({ userId }))
   }, [userId])
+
+  if (!user) return null
 
   if (!userId || !userInfo) return null
 
