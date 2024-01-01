@@ -18,3 +18,7 @@ h1 {
 .notice .error {
   color: rgb(255, 0, 0);
 }
+
+#textCenter {
+  text-align: center;
+}

@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import BlogHeader from './BlogHeader'
 import useUserState from '../hooks/useUserState'
+import { List, ListItem, ListItemText } from '@mui/material'
+import { Link } from 'react-router-dom'
 
 const sortBlogFn = (blogA, blogB) => {
   return blogB.likes - blogA.likes
@@ -24,11 +26,19 @@ const Blogs = () => {
   return (
     <Fragment>
       <br />
-      <UnorderedList>
+      <List>
         {renderedBlogs.map((blog) => (
           <BlogHeader key={blog.id} blog={blog} />
+          // <ListItem key={blog.id}>
+          //   <Link to={`/blogs/${blog.id}`}>
+          //     <ListItemText
+          //       primary={`${blog.title}`}
+          //       secondary={blog.author}
+          //     ></ListItemText>
+          //   </Link>
+          // </ListItem>
         ))}
-      </UnorderedList>
+      </List>
     </Fragment>
   )
 }

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 const useUserState = () => {
   const userState = useSelector((state) => state.user)
 
-  const user = useMemo(() => {
+  const finalUser = useMemo(() => {
     const loggedUserJSON = window.localStorage.getItem(LOGGED_BLOG_APP_USER)
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
@@ -17,7 +17,7 @@ const useUserState = () => {
     return userState
   })
 
-  return user
+  return finalUser
 }
 
 export default useUserState

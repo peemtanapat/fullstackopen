@@ -1,9 +1,7 @@
-import { useEffect, Fragment, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect, Fragment } from 'react'
+import { useDispatch } from 'react-redux'
 
 import './css/index.css'
-
-import blogService from './services/blogs'
 
 import { loadBlogList } from './reducers/blogListReducer'
 
@@ -16,6 +14,7 @@ import Menu from './components/Menu'
 import UserBlogs from './components/UserBlogs'
 import Blog from './components/Blog'
 import useUserState from './hooks/useUserState'
+import { Container } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -28,12 +27,12 @@ const App = () => {
   }, [user])
 
   return (
-    <Fragment>
+    <Container>
       <Notification />
 
       {user && (
         <Fragment>
-          <Menu />
+          <Menu user={user} />
 
           <h2>The Ultimate Blog Application</h2>
 
@@ -47,7 +46,7 @@ const App = () => {
         <Route path="/users/:id" element={<UserBlogs />} />
         <Route path="/blogs/:id" element={<Blog />} />
       </Routes>
-    </Fragment>
+    </Container>
   )
 }
 

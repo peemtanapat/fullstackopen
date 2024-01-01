@@ -1,14 +1,16 @@
+import { ListItem, ListItemText } from '@mui/material'
 import { Link } from 'react-router-dom'
 
 const BlogHeader = ({ blog }) => {
   return (
-    <li>
+    <ListItem>
       <Link to={`/blogs/${blog.id}`}>
-        <h4 data-cy="blog-headline">
-          {blog.title} by {blog.author}
-        </h4>
+        <ListItemText
+          primary={`${blog.title}`}
+          secondary={blog.author}
+        ></ListItemText>
       </Link>
-    </li>
+    </ListItem>
   )
 }
 

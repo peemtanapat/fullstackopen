@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { loadUserInfo } from '../reducers/userInfoReducer'
 import BlogHeader from './BlogHeader'
-import { UnorderedList } from './Custom'
+import { Demo, UnorderedList } from './Custom'
 import useUserState from '../hooks/useUserState'
+import { Grid, Typography } from '@mui/material'
+import { NoAuthorization } from './ErrorPage'
 
 const UserBlogs = () => {
   const dispatch = useDispatch()
@@ -18,20 +20,21 @@ const UserBlogs = () => {
     dispatch(loadUserInfo({ userId }))
   }, [userId])
 
-  if (!user) return null
+  if (!user) return <NoAuthorization />
 
   if (!userId || !userInfo) return null
 
   return (
-    <Fragment>
-      <h2>{userInfo.name}</h2>
-      <h3>Added Blogs</h3>
-      <UnorderedList>
-        {userInfo.blogs.map((blog) => {
-          return BlogHeader({ blog })
-        })}
-      </UnorderedList>
-    </Fragment>
+    <Grid item xs={12} md={6}>
+      <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+        {userInfo.name}'s Added Blogs
+      </Typography>
+      <Demo>
+        {userInfo.blogs.map((blog) => (
+          <BlogHeader key={blog.id} blog={blog} />
+        ))}
+      </Demo>
+    </Grid>
   )
 }
 

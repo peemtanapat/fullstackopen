@@ -7,8 +7,20 @@ import {
   upLikeBlog,
 } from '../reducers/blogListReducer'
 import blogListService from '../services/blogs'
-import { UnorderedList } from './Custom'
+import { Demo, UnorderedList } from './Custom'
 import useUserState from '../hooks/useUserState'
+import {
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  InputBase,
+  List,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material'
+import SendIcon from '@mui/icons-material/Send'
 
 const blogStyle = {
   paddingTop: 10,
@@ -92,42 +104,60 @@ const BlogCommentForm = ({ blog }) => {
   }
 
   return (
-    <div>
-      <form onSubmit={addComment}>
-        <label htmlFor="comment">Comment:</label>
-        <br />
-        <input
-          type="text"
-          id="comment"
-          name="comment"
-          data-testid="input-comment"
-          data-cy="input-comment"
-          value={comment}
-          onChange={({ target }) => setComment(target.value)}
-        />
-        <button
-          type="submit"
-          data-testid="button-submit-comment"
-          data-cy="button-submit-comment"
-        >
-          Add comment
-        </button>
-      </form>
-    </div>
+    <Paper
+      component="form"
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 200 }}
+      onSubmit={addComment}
+    >
+      <InputBase
+        type="text"
+        id="comment"
+        name="comment"
+        label="comment"
+        data-testid="input-comment"
+        data-cy="input-comment"
+        variant="standard"
+        sx={{ ml: 1, flex: 1 }}
+        value={comment}
+        onChange={({ target }) => setComment(target.value)}
+      />
+      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+      <IconButton
+        size="small"
+        aria-label="add"
+        type="submit"
+        data-testid="button-submit-comment"
+        data-cy="button-submit-comment"
+        sx={{ p: '10px' }}
+      >
+        <SendIcon fontSize="small" />
+      </IconButton>
+    </Paper>
   )
 }
 
 const BlogComments = ({ blog }) => {
   return (
-    <div>
-      <h2>Comments</h2>
+    <Grid item xs={12} md={6}>
+      <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+        Comments
+      </Typography>
       <BlogCommentForm blog={blog} />
-      <UnorderedList>
+      <Demo>
         {blog.comments.map((comment, index) => {
-          return <li key={index}>{comment}</li>
+          return <List key={index}>{comment}</List>
         })}
-      </UnorderedList>
-    </div>
+      </Demo>
+    </Grid>
+    // <div>
+    //   <h2>Comments</h2>
+    //   <BlogCommentForm blog={blog} />
+    //   <UnorderedList>
+    //     {blog.comments.map((comment, index) => {
+    //       return <li key={index}>{comment}</li>
+    //     })}
+    //   </UnorderedList>
+    // </div>
   )
 }
 

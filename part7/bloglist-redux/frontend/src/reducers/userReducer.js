@@ -44,8 +44,8 @@ export const logoutUser = () => {
   return async (dispatch) => {
     try {
       blogListService.setToken(null)
-      dispatch(setLoggedUser(null))
       window.localStorage.removeItem(LOGGED_BLOG_APP_USER)
+      dispatch(setLoggedUser(null))
       dispatch(resetNotification(0.5))
     } catch (error) {
       dispatch(

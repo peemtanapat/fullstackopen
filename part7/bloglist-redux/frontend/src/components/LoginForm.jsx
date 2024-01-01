@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { loginUser } from '../reducers/userReducer'
 import { useDispatch } from 'react-redux'
+import { Button, TextField } from '@mui/material'
 
 const LoginForm = ({ user }) => {
   const dispatch = useDispatch()
@@ -20,9 +21,10 @@ const LoginForm = ({ user }) => {
       <Fragment>
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
-          <label htmlFor="username">Username:</label>
+          {/* <label htmlFor="username">username:</label> */}
           <br />
-          <input
+          <TextField
+            label="username"
             type="text"
             id="username"
             name="username"
@@ -30,19 +32,18 @@ const LoginForm = ({ user }) => {
             onChange={({ target }) => setUsername(target.value)}
           />
           <br />
-          <label htmlFor="password">Password:</label>
-          <br />
-          <input
+          <TextField
             type="password"
+            label="password"
             id="password"
             name="password"
             data-cy="password"
             onChange={({ target }) => setPassword(target.value)}
           />
           <br />
-          <button type="submit" data-cy="login-submit">
+          <Button type="submit" data-cy="login-submit">
             Login
-          </button>
+          </Button>
         </form>
       </Fragment>
     )

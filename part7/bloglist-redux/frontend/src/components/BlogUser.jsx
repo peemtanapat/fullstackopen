@@ -1,10 +1,18 @@
 import { Fragment, useEffect } from 'react'
 import { loadUsersStat } from '../reducers/usersStatReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import useUserState from '../hooks/useUserState'
 import { NoAuthorization } from './ErrorPage'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
 
 const BlogUser = () => {
   const dispatch = useDispatch()
@@ -23,34 +31,32 @@ const BlogUser = () => {
   return (
     <Fragment>
       <h2>Users' Stat</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Blogs Created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {usersStat.map((stat) => {
-            const createdBlogAmount = stat.blogs.length
-            return (
-              <tr key={stat.id}>
-                <td>
-                  <Link to={`/users/${stat.id}`}>{stat.name}</Link>
-                </td>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <tr>
+              <th>Name</th>
+              <th>Blogs Created</th>
+            </tr>
+          </TableHead>
+          <TableBody>
+            {usersStat.map((stat) => {
+              const createdBlogAmount = stat.blogs.length
+              return (
+                <TableRow key={stat.id}>
+                  <TableCell>
+                    <Link to={`/users/${stat.id}`}>{stat.name}</Link>
+                  </TableCell>
 
-                <TdCenter>{createdBlogAmount}</TdCenter>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+                  <TableCell id="textCenter">{createdBlogAmount}</TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Fragment>
   )
 }
-
-const TdCenter = styled.td`
-  text-align: center;
-`
 
 export default BlogUser
