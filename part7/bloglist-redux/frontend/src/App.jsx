@@ -14,6 +14,8 @@ import BlogHome from './components/BlogHome'
 import LogoutForm from './components/LogoutForm'
 import Notification from './components/Notification'
 import Menu from './components/Menu'
+import UserBlogs from './components/UserBlogs'
+import Blog from './components/Blog'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -43,7 +45,7 @@ const App = () => {
         <Fragment>
           <Menu />
 
-          <h2>Blog&#39;s {user.name}</h2>
+          <h2>The Ultimate Blog Application</h2>
 
           <LogoutForm user={user} />
         </Fragment>
@@ -51,7 +53,9 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<BlogHome user={user} />} />
-        <Route path="/users" element={<BlogUser></BlogUser>} />
+        <Route path="/users" element={<BlogUser />} />
+        <Route path="/users/:id" element={<UserBlogs />} />
+        <Route path="/blogs/:id" element={<Blog />} />
       </Routes>
     </Fragment>
   )

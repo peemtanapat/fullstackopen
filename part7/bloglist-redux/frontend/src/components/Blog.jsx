@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteBlog, upLikeBlog } from '../reducers/blogListReducer'
+import blogListService from '../services/blogs'
 
 const blogStyle = {
   paddingTop: 10,
@@ -9,55 +12,50 @@ const blogStyle = {
   marginBottom: 5,
 }
 
-const Blog = ({ blog, loggedUser, handleUpLikeBlog, handleDeleteBlog }) => {
-  const [viewDetailVisible, setViewDetailVisible] = useState(false)
-  const hideWhenDetailVisible = viewDetailVisible
-    ? { display: 'none' }
-    : { display: '' }
-  const showWhenDetailVisible = viewDetailVisible
-    ? { display: '' }
-    : { display: 'none' }
+const Blog = ({ blog, loggedUser }) => {
+  const dispatch = useDispatch()
+
+  const params = useParams()
+  const blogId = params.id
+
+  const userState = useSelector((state) => state.user)
+  const singleBlog = useSelector((state) => state.singleBlog)
+  const [finalBlog, setFinalBlog] = useState(null)
+
+  const blogs = useSelector((state) => state.blogList)
+
+  // const finalBlog = useMemo(() => {
+  //   return blogs.find((blog) => blog.id === blogId)
+  // }, [blogs])
+
+  useEffect(() => {
+    if (!finalBlog) {
+      const foundBlog = blogs.find((blog) => blog.id === blogId)
+      setFinalBlog(foundBlog)
+    } else {
+      setFinalBlog(singleBlog)
+    }
+  }, [singleBlog, blogs])
+
+  if (!finalBlog) return null
 
   return (
     <div style={blogStyle}>
       <span data-cy="blog-headline">
-        {blog.title} by {blog.author}
+        <Link to={`/`}>
+          {finalBlog.title} by {finalBlog.author}
+        </Link>
       </span>
-      <button
-        style={hideWhenDetailVisible}
-        data-cy="button-view-blog"
-        onClick={() => setViewDetailVisible(true)}
-      >
-        view
-      </button>
-      <button
-        style={showWhenDetailVisible}
-        onClick={() => setViewDetailVisible(false)}
-      >
-        hide
-      </button>
-      {viewDetailVisible && (
-        <BlogDetail
-          blog={blog}
-          loggedUser={loggedUser}
-          visible={showWhenDetailVisible}
-          handleUpLikeBlog={handleUpLikeBlog}
-          handleDeleteBlog={handleDeleteBlog}
-        />
-      )}
+      <BlogDetail blog={finalBlog} loggedUser={userState} />
     </div>
   )
 }
 
-const BlogDetail = ({
-  blog,
-  loggedUser,
-  visible,
-  handleUpLikeBlog,
-  handleDeleteBlog,
-}) => {
+const BlogDetail = ({ blog, loggedUser }) => {
+  const dispatch = useDispatch()
+
   return (
-    <div style={visible} data-cy="blog-detail">
+    <div data-cy="blog-detail">
       <ul>
         <li>URL: {blog.url}</li>
         <li data-cy="blog-like-info">
@@ -65,7 +63,7 @@ const BlogDetail = ({
           <button
             data-cy="button-like-blog"
             onClick={(event) => {
-              handleUpLikeBlog(event, blog)
+              dispatch(upLikeBlog(blog, true))
             }}
           >
             like
@@ -74,18 +72,27 @@ const BlogDetail = ({
         <li>Admin: {blog.user.name}</li>
       </ul>
 
-      {blogService.isBlogOwner({ loggedUser, blog }) && (
-        <RemoveBlogButton blog={blog} handleDeleteBlog={handleDeleteBlog} />
+      {blogListService.isBlogOwner({ loggedUser, blog }) && (
+        <RemoveBlogButton blog={blog} />
       )}
     </div>
   )
 }
 
-const RemoveBlogButton = ({ blog, handleDeleteBlog }) => {
+const RemoveBlogButton = ({ blog }) => {
+  const handleDeleteBlog = async (event) => {
+    event.preventDefault()
+
+    const confirmMessage = `Remove blog ${blog.title} by ${blog.author}`
+    if (window.confirm(confirmMessage)) {
+      dispatch(deleteBlog(blog))
+    }
+  }
+
   return (
     <form
       onSubmit={(event) => {
-        handleDeleteBlog(event, blog)
+        handleDeleteBlog(event)
       }}
     >
       <button type="submit" data-cy="button-remove-blog">

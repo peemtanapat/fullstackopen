@@ -20,6 +20,8 @@ const LogoutForm = ({ user }) => {
       <button type="submit" data-cy="button-logout">
         Logout
       </button>
+      <br />
+      <br />
     </form>
   )
 }

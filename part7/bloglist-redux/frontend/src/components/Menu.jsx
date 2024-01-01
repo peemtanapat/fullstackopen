@@ -9,7 +9,7 @@ const Menu = () => {
   return (
     <Fragment>
       <Link style={padding} to={'/'}>
-        Home
+        Blogs
       </Link>
       <Link style={padding} to={'/users'}>
         Users

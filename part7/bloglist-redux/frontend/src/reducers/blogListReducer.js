@@ -5,6 +5,7 @@ import { BLOG_LIST } from '../constant'
 import blogListService from '../services/blogs'
 import { logAction } from '../utils/logger'
 import { pushNotification, resetNotification } from './notificationReducer'
+import { loadSingleBlog } from './singleBlogReducer'
 
 const blogListReducer = createSlice({
   name: BLOG_LIST,
@@ -57,7 +58,7 @@ export const createNewBlog = (newBlog) => {
   }
 }
 
-export const upLikeBlog = (blog) => {
+export const upLikeBlog = (blog, isSingleBlog = false) => {
   return async (dispatch) => {
     try {
       const updatedLikeBlog = {
@@ -68,7 +69,12 @@ export const upLikeBlog = (blog) => {
       const updatedBlog = await blogListService.update({
         updatedBlog: updatedLikeBlog,
       })
-      dispatch(loadBlogList())
+      console.log('%c⧭', 'color: #408059', { isSingleBlog })
+      if (isSingleBlog) {
+        dispatch(loadSingleBlog(blog.id))
+      } else {
+        dispatch(loadBlogList())
+      }
       dispatch(
         pushNotification({
           message: `you liked "${updatedBlog.title}" by ${updatedBlog.author}`,

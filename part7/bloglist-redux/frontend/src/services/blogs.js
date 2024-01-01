@@ -9,6 +9,11 @@ const getAll = async () => {
   return request.data
 }
 
+const getBlog = async ({ blogId }) => {
+  const request = await axios.get(`${baseUrl}/${blogId}`)
+  return request.data
+}
+
 const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
@@ -48,4 +53,12 @@ const isBlogOwner = ({ loggedUser, blog }) => {
   return loggedUser.username === blog.user.username
 }
 
-export default { getAll, create, update, deleteBlog, setToken, isBlogOwner }
+export default {
+  getAll,
+  getBlog,
+  create,
+  update,
+  deleteBlog,
+  setToken,
+  isBlogOwner,
+}

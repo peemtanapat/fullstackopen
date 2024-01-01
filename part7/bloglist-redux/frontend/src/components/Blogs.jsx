@@ -1,55 +1,40 @@
 import { Fragment, useMemo } from 'react'
-import Blog from './Blog'
-import { useDispatch, useSelector } from 'react-redux'
-import { deleteBlog, upLikeBlog } from '../reducers/blogListReducer'
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+import BlogHeader from './BlogHeader'
 
 const sortBlogFn = (blogA, blogB) => {
   return blogB.likes - blogA.likes
 }
 
 const Blogs = ({ loggedUser }) => {
-  const dispatch = useDispatch()
-
-  if (!loggedUser) return null
+  const userState = useSelector((state) => state.user)
+  console.log('%c⧭', 'color: #7f7700', { loggedUser, userState })
 
   const blogs = useSelector((state) => state.blogList)
-
-  if (!blogs) return null
 
   const renderedBlogs = useMemo(() => {
     const copied = [...blogs]
     return copied.sort(sortBlogFn)
   }, [blogs])
 
-  const handleUpLikeBlog = async (event, toUpdateBlog) => {
-    event.preventDefault()
-
-    dispatch(upLikeBlog(toUpdateBlog))
-  }
-
-  const handleDeleteBlog = async (event, toDeleteBlog) => {
-    event.preventDefault()
-
-    const confirmMessage = `Remove blog ${toDeleteBlog.title} by ${toDeleteBlog.author}`
-    if (window.confirm(confirmMessage)) {
-      dispatch(deleteBlog(toDeleteBlog))
-    }
-  }
+  if (!loggedUser) return null
+  if (!blogs) return null
 
   return (
     <Fragment>
       <br />
-      {renderedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          loggedUser={loggedUser}
-          handleUpLikeBlog={handleUpLikeBlog}
-          handleDeleteBlog={handleDeleteBlog}
-        />
-      ))}
+      <UnorderedList>
+        {renderedBlogs.map((blog) => (
+          <BlogHeader key={blog.id} blog={blog} />
+        ))}
+      </UnorderedList>
     </Fragment>
   )
 }
+
+const UnorderedList = styled.ul`
+  list-style-type: none;
+`
 
 export default Blogs

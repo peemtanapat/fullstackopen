@@ -1,4 +1,7 @@
 export const BLOG_LIST = 'bloglist'
+export const SINGLE_BLOG = 'singleBlog'
 export const NOTIFICATION = 'notification'
 export const USER = 'user'
+export const USERS_STAT = 'userStat'
+export const USER_INFO = 'userInfo'
 export const LOGGED_BLOG_APP_USER = 'loggedBlogAppUser'

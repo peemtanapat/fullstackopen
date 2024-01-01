@@ -24,10 +24,6 @@ describe('A Blog Rendering', () => {
 
     screen.debug()
 
-    // TODO: NB: A more consistent way of selecting elements is using a data attribute
-    // that is specifically defined for testing purposes. Using react-testing-library,
-    // we can leverage the getByTestId method to select elements with a specified data-testid attribute.
-
     // expect to display as default
     const elementTitle = screen.getByText(/This is a title of a blog/i)
     screen.debug(elementTitle)

@@ -6,16 +6,7 @@ describe('New Blog Form', () => {
   test('create new blog form, event handler is called and display right details', async () => {
     const clickNewBlogFn = jest.fn()
 
-    render(
-      <BlogForm
-        handleCreateBlog={clickNewBlogFn}
-        createBlogVisible={false}
-        setCreateBlogVisible={jest.fn()}
-        setAuthor={jest.fn()}
-        setTitle={jest.fn()}
-        setUrl={jest.fn()}
-      />,
-    )
+    render(<BlogForm />)
 
     const user = userEvent.setup()
 
