@@ -95,8 +95,8 @@ describe('Blog List API Tests', () => {
     })
 
     test('successfully creates a new blog post', async () => {
-      const initUserId = await helper.getInitUserId()
-      newBlog.userId = initUserId
+      const initUser = await helper.getInitUserId()
+      newBlog.userId = initUser._id.toString()
 
       const res = await api
         .post('/api/blogs')
@@ -108,7 +108,13 @@ describe('Blog List API Tests', () => {
       delete savedBlog.id
       delete newBlog.userId
 
-      expect(savedBlog).toEqual({ ...newBlog, user: initUserId })
+      expect(savedBlog).toEqual({
+        ...newBlog,
+        user: {
+          username: initUser.username,
+          name: initUser.name,
+        },
+      })
 
       const resGetAll = await api.get('/api/blogs')
 

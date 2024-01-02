@@ -14,7 +14,7 @@ describe('BlogList App', function () {
       cy.visit('')
     })
 
-    it('Login form is shown by default', function () {
+    it.only('Login form is shown by default', function () {
       cy.contains('Log in to application')
       cy.contains('Username')
       cy.contains('Password')

@@ -11,10 +11,10 @@ const usersInDb = async () => {
   return allUsers.map((user) => user.toJSON())
 }
 
-const getInitUserId = async () => {
+const getInitUser = async () => {
   const initUser = await User.findOne({ username: INIT_USERNAME })
 
-  return initUser._id.toString()
+  return initUser
 }
 
 const clearUsers = async () => {
@@ -39,7 +39,7 @@ const createMockUser = async (
 
 module.exports = {
   usersInDb,
-  getInitUserId,
+  getInitUserId: getInitUser,
   createMockUser,
   clearUsers,
   INIT_USERNAME,
