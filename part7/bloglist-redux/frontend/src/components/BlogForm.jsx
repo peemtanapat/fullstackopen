@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../reducers/blogListReducer'
+import { Box, Button, Grid, TextField } from '@mui/material'
 
 const BlogForm = () => {
   const dispatch = useDispatch()
@@ -26,63 +27,81 @@ const BlogForm = () => {
 
   return (
     <Fragment>
-      <h2>Create new</h2>
       <div style={hideWhenVisible}>
-        <button
+        <Button
           data-testid="button-new-blog"
           data-cy="button-new-blog"
+          variant="contained"
           onClick={() => setCreateBlogVisible(true)}
         >
-          new blog
-        </button>
+          Create New Blog
+        </Button>
       </div>
       <div style={showWhenVisible}>
-        <form onSubmit={createBlog} style={showWhenVisible}>
-          <label htmlFor="title">Title:</label>
-          <br />
-          <input
-            type="text"
-            id="title"
-            name="title"
-            data-testid="input-title"
-            data-cy="input-title"
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-          <br />
-          <label htmlFor="author">Author:</label>
-          <br />
-          <input
-            type="text"
-            id="author"
-            name="author"
-            data-testid="input-author"
-            data-cy="input-author"
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-          <br />
-          <label htmlFor="url">Url:</label>
-          <br />
-          <input
-            type="text"
-            id="url"
-            name="url"
-            data-testid="input-url"
-            data-cy="input-url"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-          <br />
-          <button
-            type="submit"
-            data-testid="button-submit-blog"
-            data-cy="button-submit-blog"
+        <Box component="form" onSubmit={createBlog} style={showWhenVisible}>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            Create
-          </button>
-        </form>
-        <button onClick={() => setCreateBlogVisible(false)}>cancel</button>
+            <Grid xs={12} item={true}>
+              <TextField
+                label="Title"
+                size="small"
+                type="text"
+                id="title"
+                name="title"
+                data-testid="input-title"
+                data-cy="input-title"
+                value={title}
+                onChange={({ target }) => setTitle(target.value)}
+              />
+            </Grid>
+            <Grid xs={12} item={true}>
+              <TextField
+                label="Author"
+                type="text"
+                size="small"
+                id="author"
+                name="author"
+                data-testid="input-author"
+                data-cy="input-author"
+                value={author}
+                onChange={({ target }) => setAuthor(target.value)}
+              />
+            </Grid>
+
+            <Grid xs={12} item={true}>
+              <TextField
+                label="URL"
+                type="text"
+                size="small"
+                id="url"
+                name="url"
+                data-testid="input-url"
+                data-cy="input-url"
+                value={url}
+                onChange={({ target }) => setUrl(target.value)}
+              />
+            </Grid>
+            <Grid xs={12} item={true}>
+              <Button
+                variant="contained"
+                type="submit"
+                data-testid="button-submit-blog"
+                data-cy="button-submit-blog"
+              >
+                Create
+              </Button>
+              <Button
+                color="inherit"
+                onClick={() => setCreateBlogVisible(false)}
+              >
+                Hide
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       </div>
     </Fragment>
   )

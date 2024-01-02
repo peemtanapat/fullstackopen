@@ -95,7 +95,7 @@ export const upLikeBlog = (blog, isSingleBlog = false) => {
       const updatedBlog = await blogListService.update({
         updatedBlog: updatedLikeBlog,
       })
-      console.log('%c⧭', 'color: #408059', { isSingleBlog })
+
       if (isSingleBlog) {
         dispatch(loadSingleBlog(blog.id))
       } else {

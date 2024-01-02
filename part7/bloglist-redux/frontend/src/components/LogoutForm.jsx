@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { logoutUser } from '../reducers/userReducer'

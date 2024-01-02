@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material'
 
 const BlogUser = () => {
@@ -30,7 +31,7 @@ const BlogUser = () => {
 
   return (
     <Fragment>
-      <h2>Users' Stat</h2>
+      <Typography fontSize={20}>Users' Stat</Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -44,7 +45,7 @@ const BlogUser = () => {
               const createdBlogAmount = stat.blogs.length
               return (
                 <TableRow key={stat.id}>
-                  <TableCell>
+                  <TableCell size="medium">
                     <Link to={`/users/${stat.id}`}>{stat.name}</Link>
                   </TableCell>
 

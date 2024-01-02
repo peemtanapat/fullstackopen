@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   addNewComment,
@@ -7,7 +7,7 @@ import {
   upLikeBlog,
 } from '../reducers/blogListReducer'
 import blogListService from '../services/blogs'
-import { Demo, UnorderedList } from './Custom'
+import { Demo } from './Custom'
 import useUserState from '../hooks/useUserState'
 import {
   Button,
@@ -17,18 +17,10 @@ import {
   InputBase,
   List,
   Paper,
-  TextField,
   Typography,
 } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
-
-const blogStyle = {
-  paddingTop: 10,
-  paddingLeft: 10,
-  border: 'solid',
-  borderWidth: 1,
-  marginBottom: 5,
-}
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const Blog = () => {
   const params = useParams()
@@ -52,12 +44,12 @@ const Blog = () => {
   if (!finalBlog) return null
 
   return (
-    <div style={blogStyle}>
-      <span data-cy="blog-headline">
-        <Link to={`/`}>
+    <div>
+      <Typography fontSize={18} fontWeight="bold" data-cy="blog-headline">
+        <Link style={{ textDecoration: 'none' }} to={`/`}>
           {finalBlog.title} by {finalBlog.author}
         </Link>
-      </span>
+      </Typography>
       <BlogDetail blog={finalBlog} loggedUser={user} />
     </div>
   )
@@ -69,26 +61,28 @@ const BlogDetail = ({ blog, loggedUser }) => {
   return (
     <div data-cy="blog-detail">
       <ul>
-        <li>URL: {blog.url}</li>
-        <li data-cy="blog-like-info">
+        <Typography>URL: {blog.url}</Typography>
+        <Typography data-cy="blog-like-info">
           Likes: {blog.likes}{' '}
-          <button
+          <IconButton
+            color="warning"
+            size="small"
             data-cy="button-like-blog"
             onClick={(event) => {
               dispatch(upLikeBlog(blog, true))
             }}
           >
-            like
-          </button>
-        </li>
-        <li>Admin: {blog.user.name}</li>
+            <FavoriteIcon />
+            Like
+          </IconButton>
+        </Typography>
+        <Typography>Admin: {blog.user.name}</Typography>
       </ul>
-
       {blogListService.isBlogOwner({ loggedUser, blog }) && (
         <RemoveBlogButton blog={blog} />
       )}
-
       <BlogComments blog={blog} />
+      <br />
     </div>
   )
 }
@@ -101,6 +95,7 @@ const BlogCommentForm = ({ blog }) => {
     event.preventDefault()
 
     dispatch(addNewComment(blog, comment))
+    setComment('')
   }
 
   return (
@@ -139,35 +134,36 @@ const BlogCommentForm = ({ blog }) => {
 const BlogComments = ({ blog }) => {
   return (
     <Grid item xs={12} md={6}>
-      <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
+      <Typography
+        fontSize={16}
+        sx={{ mt: 4, mb: 2 }}
+        variant="h6"
+        component="div"
+      >
         Comments
       </Typography>
       <BlogCommentForm blog={blog} />
+
       <Demo>
-        {blog.comments.map((comment, index) => {
+        {blog.comments?.map((comment, index) => {
           return <List key={index}>{comment}</List>
         })}
       </Demo>
     </Grid>
-    // <div>
-    //   <h2>Comments</h2>
-    //   <BlogCommentForm blog={blog} />
-    //   <UnorderedList>
-    //     {blog.comments.map((comment, index) => {
-    //       return <li key={index}>{comment}</li>
-    //     })}
-    //   </UnorderedList>
-    // </div>
   )
 }
 
 const RemoveBlogButton = ({ blog }) => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const handleDeleteBlog = async (event) => {
     event.preventDefault()
 
     const confirmMessage = `Remove blog ${blog.title} by ${blog.author}`
     if (window.confirm(confirmMessage)) {
       dispatch(deleteBlog(blog))
+      navigate('/')
     }
   }
 
@@ -177,9 +173,15 @@ const RemoveBlogButton = ({ blog }) => {
         handleDeleteBlog(event)
       }}
     >
-      <button type="submit" data-cy="button-remove-blog">
+      <Button
+        variant="contained"
+        color="inherit"
+        size="small"
+        type="submit"
+        data-cy="button-remove-blog"
+      >
         remove
-      </button>
+      </Button>
     </form>
   )
 }

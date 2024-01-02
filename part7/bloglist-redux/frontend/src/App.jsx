@@ -1,4 +1,4 @@
-import { useEffect, Fragment } from 'react'
+import { useEffect, Fragment, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import './css/index.css'
@@ -8,17 +8,18 @@ import { loadBlogList } from './reducers/blogListReducer'
 import { Route, Routes } from 'react-router-dom'
 import BlogUser from './components/BlogUser'
 import BlogHome from './components/BlogHome'
-import LogoutForm from './components/LogoutForm'
 import Notification from './components/Notification'
 import Menu from './components/Menu'
 import UserBlogs from './components/UserBlogs'
 import Blog from './components/Blog'
 import useUserState from './hooks/useUserState'
-import { Container } from '@mui/material'
+import { Container, Typography } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
   const user = useUserState()
+
+  const [forceLogout, setForceLogout] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -32,11 +33,10 @@ const App = () => {
 
       {user && (
         <Fragment>
-          <Menu user={user} />
-
-          <h2>The Ultimate Blog Application</h2>
-
-          <LogoutForm user={user} />
+          <Menu user={user} setForceLogout={setForceLogout} />
+          <br />
+          <Typography fontSize={24}>The Ultimate Blog Application</Typography>
+          <br />
         </Fragment>
       )}
 

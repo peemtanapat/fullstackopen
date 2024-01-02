@@ -1,7 +1,8 @@
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 import { loginUser } from '../reducers/userReducer'
 import { useDispatch } from 'react-redux'
-import { Button, TextField } from '@mui/material'
+import { Box, Button, Grid, TextField, Typography } from '@mui/material'
+import LoginIcon from '@mui/icons-material/Login'
 
 const LoginForm = ({ user }) => {
   const dispatch = useDispatch()
@@ -18,34 +19,44 @@ const LoginForm = ({ user }) => {
 
   if (user === null) {
     return (
-      <Fragment>
-        <h2>Log in to application</h2>
-        <form onSubmit={handleLogin}>
-          {/* <label htmlFor="username">username:</label> */}
-          <br />
-          <TextField
-            label="username"
-            type="text"
-            id="username"
-            name="username"
-            data-cy="username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-          <br />
-          <TextField
-            type="password"
-            label="password"
-            id="password"
-            name="password"
-            data-cy="password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-          <br />
-          <Button type="submit" data-cy="login-submit">
-            Login
-          </Button>
-        </form>
-      </Fragment>
+      <Box component="form" onSubmit={handleLogin} sx={{ width: '100%' }}>
+        <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid xs={12} item={true}>
+            <Typography fontSize={20}>Log in to application</Typography>
+          </Grid>
+          <Grid xs={12} item={true}>
+            <TextField
+              label="username"
+              type="text"
+              id="username"
+              name="username"
+              data-cy="username"
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </Grid>
+          <Grid xs={12} item={true}>
+            <TextField
+              type="password"
+              label="password"
+              id="password"
+              name="password"
+              data-cy="password"
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </Grid>
+          <Grid xs={12} item={true}>
+            <Button
+              size="small"
+              variant="contained"
+              type="submit"
+              data-cy="login-submit"
+              startIcon={<LoginIcon />}
+            >
+              Login
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
     )
   }
 }

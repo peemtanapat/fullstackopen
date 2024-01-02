@@ -7,4 +7,5 @@ export const UnorderedList = styled.ul`
 
 export const Demo = muiStyled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
+  paddingTop: '1.5rem',
 }))

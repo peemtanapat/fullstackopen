@@ -1,15 +1,10 @@
-import { AppBar, Button, Toolbar } from '@mui/material'
-import React, { Fragment } from 'react'
+import { AppBar, Button, Toolbar, Typography } from '@mui/material'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { logoutUser } from '../reducers/userReducer'
-import { Label } from '@mui/icons-material'
 
-const Menu = ({ user }) => {
-  const padding = {
-    paddingRight: 5,
-  }
-
+const Menu = ({ user, setForceLogout }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -17,6 +12,7 @@ const Menu = ({ user }) => {
     event.preventDefault()
 
     dispatch(logoutUser())
+    setForceLogout(true)
     navigate('/')
   }
 
@@ -24,19 +20,15 @@ const Menu = ({ user }) => {
     <AppBar position="static" color="transparent">
       <Toolbar>
         <Button color="inherit">
-          <Link style={padding} to={'/'}>
-            Blogs
-          </Link>
+          <Link to="/">Blogs</Link>
         </Button>
         <Button color="inherit">
-          <Link style={padding} to={'/users'}>
-            Users
-          </Link>
+          <Link to="/users">Users</Link>
         </Button>
         <Button color="inherit" onClick={handleLogout}>
-          Logout
+          <Link to="/">Logout</Link>
         </Button>
-        <p>{user.name}</p>
+        <Typography fontWeight="light">({user.name})</Typography>
       </Toolbar>
     </AppBar>
   )
