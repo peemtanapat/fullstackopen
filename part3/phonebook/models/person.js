@@ -1,9 +1,4 @@
-const {
-  connect,
-  Schema,
-  set,
-  default: mongoose,
-} = require('mongoose')
+const { connect, Schema, set, default: mongoose } = require('mongoose')
 
 set('strictQuery', false)
 
@@ -33,7 +28,8 @@ const phoneBookSchema = new Schema({
       validator: (value) => {
         return /^\d{2,3}-\d{6,10}$/.test(value)
       },
-      message: (props) => `${props.value} is invalid phone number format!`,
+      message: (props) =>
+        `${props.value} is invalid phone number format! ..valid format ex. 012-33445566`,
     },
   },
 })

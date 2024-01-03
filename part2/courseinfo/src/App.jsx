@@ -51,7 +51,7 @@ const App = () => {
   return (
     <Fragment>
       <Header text="Web Development Curriculum" />
-      <Course courses={courses} />;
+      <Course courses={courses} />
     </Fragment>
   );
 };
