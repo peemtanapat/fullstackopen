@@ -27,8 +27,6 @@ export const asObject = (anecdote) => {
   };
 };
 
-// const initialState = anecdotesAtStart.map(asObject);
-
 // ** Change the definition of the filter reducer and action creators
 // ** to use the Redux Toolkit's createSlice function.
 const anecdoteSlice = createSlice({
@@ -38,7 +36,6 @@ const anecdoteSlice = createSlice({
     voteAnecdote(state, action) {
       logAction('voteAnecdote', state, action);
       const anecdote = action.payload;
-      console.log('%c⧭', 'color: #007300', { anecdote });
       return state.map((item) => {
         if (item.id === anecdote.id) {
           return { ...item, votes: item.votes + 1 };
@@ -48,7 +45,7 @@ const anecdoteSlice = createSlice({
     },
     addNewAnecdote(state, action) {
       logAction('addNewAnecdote', state, action);
-      return state.concat(asObject(action.payload));
+      return state.concat(action.payload);
     },
     setAnecdoteList(state, action) {
       logAction('setAnecdoteList', state, action);
@@ -71,9 +68,10 @@ export const initializeAnecdoteList = () => {
 
 export const addNewAnecdoteAction = (newAnecdote) => {
   return async (dispatch) => {
-    await createAnecdote(newAnecdote);
+    const newAnecdoteObj = asObject(newAnecdote);
+    await createAnecdote(newAnecdoteObj);
 
-    dispatch(addNewAnecdote(newAnecdote));
+    dispatch(addNewAnecdote(newAnecdoteObj));
 
     dispatch(setNotification(`Added '${newAnecdote}'`, 5));
   };
