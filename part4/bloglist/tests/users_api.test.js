@@ -1,10 +1,8 @@
 require('dotenv').config({ path: __dirname + '/.env' })
 
-const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const User = require('../models/user')
 const helper = require('../utils/test_helper')
 
 const api = supertest(app)

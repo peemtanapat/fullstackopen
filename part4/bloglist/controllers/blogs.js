@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
 
 const Blog = require('../models/blog')
-const logger = require('../utils/logger')
 const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', async (req, res) => {
@@ -18,14 +17,14 @@ blogsRouter.get('/:id', async (req, res) => {
   const foundBlog = await Blog.findById(id)
 
   if (foundBlog) {
-    return res.json(Blog)
+    return res.json(foundBlog)
   } else {
     return res.status(404).end()
   }
 })
 
 blogsRouter.post('/', userExtractor, async (req, res) => {
-  const { title, author, url, likes, userId } = req.body
+  const { title, author, url, likes } = req.body
 
   const user = req.user
 
