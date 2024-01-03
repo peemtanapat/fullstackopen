@@ -8,7 +8,8 @@ const BlogHeader = ({ blog }) => {
         <ListItemText
           primary={`${blog.title}`}
           secondary={blog.author}
-        ></ListItemText>
+          data-cy="blog-headline"
+        />
       </Link>
     </ListItem>
   )

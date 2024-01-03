@@ -29,14 +29,6 @@ const Blogs = () => {
       <List>
         {renderedBlogs.map((blog) => (
           <BlogHeader key={blog.id} blog={blog} />
-          // <ListItem key={blog.id}>
-          //   <Link to={`/blogs/${blog.id}`}>
-          //     <ListItemText
-          //       primary={`${blog.title}`}
-          //       secondary={blog.author}
-          //     ></ListItemText>
-          //   </Link>
-          // </ListItem>
         ))}
       </List>
     </Fragment>

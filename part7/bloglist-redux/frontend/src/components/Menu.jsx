@@ -19,16 +19,24 @@ const Menu = ({ user, setForceLogout }) => {
   return (
     <AppBar position="static" color="transparent">
       <Toolbar>
-        <Button color="inherit">
-          <Link to="/">Blogs</Link>
-        </Button>
-        <Button color="inherit">
-          <Link to="/users">Users</Link>
-        </Button>
-        <Button color="inherit" onClick={handleLogout}>
-          <Link to="/">Logout</Link>
-        </Button>
-        <Typography fontWeight="light">({user.name})</Typography>
+        <Link to="/">
+          <Button color="inherit">Blogs</Button>
+        </Link>
+        <Link to="/users">
+          <Button color="inherit">Users</Button>
+        </Link>
+        <Link to="/">
+          <Button
+            color="inherit"
+            onClick={handleLogout}
+            data-cy="button-logout"
+          >
+            Logout
+          </Button>
+        </Link>
+        <Typography fontWeight="light" data-cy="logged-user">
+          ({user.name})
+        </Typography>
       </Toolbar>
     </AppBar>
   )

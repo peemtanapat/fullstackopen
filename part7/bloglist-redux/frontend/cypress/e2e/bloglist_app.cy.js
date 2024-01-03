@@ -14,7 +14,7 @@ describe('BlogList App', function () {
       cy.visit('')
     })
 
-    it.only('Login form is shown by default', function () {
+    it('Login form is shown by default', function () {
       cy.contains('Log in to application')
       cy.contains('Username')
       cy.contains('Password')
@@ -27,8 +27,8 @@ describe('BlogList App', function () {
         cy.get('[data-cy="password"]').type(Cypress.env('PASSWORD'))
         cy.get('[data-cy="login-submit"]').click()
 
-        cy.contains(`Blog's ${Cypress.env('NAME')}`)
-        cy.contains(`${Cypress.env('NAME')} logged in`)
+        cy.get('[data-cy="logged-user"]').should('contain', Cypress.env('NAME'))
+        cy.contains(`The Ultimate Blog Application`)
       })
 
       it('fails with wrong credentials', function () {
@@ -40,8 +40,8 @@ describe('BlogList App', function () {
 
         cy.get('.error')
           .should('contain', 'Wrong Username or Password')
-          .and('have.css', 'color', 'rgb(255, 0, 0)')
-          .and('have.css', 'border-style', 'none')
+          .and('have.css', 'color', 'rgb(95, 33, 32)')
+          .and('have.css', 'box-shadow', 'none')
         cy.contains('Log in to application')
         cy.get('html').should('not.contain', `${Cypress.env('NAME')} logged in`)
       })
@@ -77,11 +77,8 @@ describe('BlogList App', function () {
 
         // notification in green
         // new blog added : "Why FullStackOpen is the Best?" by peemtanapat
-        cy.get('.success')
-          .should('contain', TITLE_1)
-          .and('contain', AUTHOR_1)
-          .and('have.css', 'color', 'rgb(0, 128, 0)')
-          .and('have.css', 'border-style', 'none')
+        cy.get('.success').should('contain', TITLE_1).and('contain', AUTHOR_1)
+
         // contain these info in blog list
         cy.get('[data-cy="blog-headline"]')
           .should('contain', TITLE_1)
@@ -101,7 +98,7 @@ describe('BlogList App', function () {
         // 5.20 Make a test that confirms users can like a blog.
         it('user can like a blog', function () {
           // click view
-          cy.get('[data-cy="button-view-blog"]').click()
+          cy.get('[data-cy="blog-headline"]').click()
           cy.get('[data-cy="blog-like-info"]').should('contain', 'Likes: 0')
           // click like
           cy.get('[data-cy="button-like-blog"]').click()
@@ -112,26 +109,25 @@ describe('BlogList App', function () {
         // 5.21 Make a test for ensuring that the user who created a blog can delete it.
         it('only user who created a blog can delete it', function () {
           // click view
-          cy.get('[data-cy="button-view-blog"]').click()
+          cy.get('[data-cy="blog-headline"]').click()
           // click delete
           cy.get('[data-cy="button-remove-blog"]').click()
           // assert
-          cy.get('html')
-            .should('not.contain', TITLE_1)
-            .and('not.contain', AUTHOR_1)
+          cy.get('[data-cy="blog-headline"]').should('not.exist')
         })
 
         // 5.22 Make a test for ensuring that only the creator can see the delete button of a blog, not anyone else.
         it('only the creator can see the delete button of a blog, not anyone else', function () {
           // *creator
           // click view
-          cy.get('[data-cy="button-view-blog"]').click()
+          cy.get('[data-cy="blog-headline"]').click()
           // can see delete button
           cy.get('[data-cy="blog-detail"]').should('contain', 'remove')
 
           // *not creator
           // logout
           cy.get('[data-cy="button-logout"]').click()
+
           const someBodyUsername = 'somebody'
           const someBodyPassword = 'pass5678'
           const someBodyName = 'Adam Smith'
@@ -147,9 +143,10 @@ describe('BlogList App', function () {
           cy.get('[data-cy="username"]').type(someBodyUsername)
           cy.get('[data-cy="password"]').type(someBodyPassword)
           cy.get('[data-cy="login-submit"]').click()
+          cy.wait(1500)
 
           // click view
-          cy.get('[data-cy="button-view-blog"]').click()
+          cy.get('[data-cy="blog-headline"]').click()
           // can't see delete button
           cy.get('[data-cy="blog-detail"]').should('not.contain', 'remove')
         })
@@ -178,12 +175,13 @@ describe('BlogList App', function () {
 
           // click view and like 2nd ranking blog, to make it lead to 1st ranking
           // click view
-          cy.get('[data-cy="button-view-blog"]').eq(1).click()
+          cy.get('[data-cy="blog-headline"]').eq(1).click()
           // click like button 2 times
           cy.get('[data-cy="button-like-blog"]').click()
           cy.get('[data-cy="blog-like-info"]').should('contain', 'Likes: 109')
           cy.get('[data-cy="button-like-blog"]').click()
           cy.get('[data-cy="blog-like-info"]').should('contain', 'Likes: 110')
+          cy.get('[data-cy="blog-title"]').click()
           // assert after re-ordering
           cy.get('[data-cy="blog-headline"]').eq(0).should('contain', TITLE_3)
           cy.get('[data-cy="blog-headline"]').eq(1).should('contain', TITLE_2)

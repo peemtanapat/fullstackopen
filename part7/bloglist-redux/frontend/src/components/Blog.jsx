@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   addNewComment,
   deleteBlog,
+  loadBlogList,
   upLikeBlog,
 } from '../reducers/blogListReducer'
 import blogListService from '../services/blogs'
@@ -23,6 +24,7 @@ import SendIcon from '@mui/icons-material/Send'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const Blog = () => {
+  const dispatch = useDispatch()
   const params = useParams()
   const blogId = params.id
 
@@ -45,11 +47,15 @@ const Blog = () => {
 
   return (
     <div>
-      <Typography fontSize={18} fontWeight="bold" data-cy="blog-headline">
-        <Link style={{ textDecoration: 'none' }} to={`/`}>
+      <Link
+        style={{ textDecoration: 'none' }}
+        to={`/`}
+        onClick={() => dispatch(loadBlogList())}
+      >
+        <Typography fontSize={18} fontWeight="bold" data-cy="blog-title">
           {finalBlog.title} by {finalBlog.author}
-        </Link>
-      </Typography>
+        </Typography>
+      </Link>
       <BlogDetail blog={finalBlog} loggedUser={user} />
     </div>
   )

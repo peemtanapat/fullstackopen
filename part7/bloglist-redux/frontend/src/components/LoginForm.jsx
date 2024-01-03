@@ -26,7 +26,7 @@ const LoginForm = ({ user }) => {
           </Grid>
           <Grid xs={12} item={true}>
             <TextField
-              label="username"
+              label="Username"
               type="text"
               id="username"
               name="username"
@@ -37,7 +37,7 @@ const LoginForm = ({ user }) => {
           <Grid xs={12} item={true}>
             <TextField
               type="password"
-              label="password"
+              label="Password"
               id="password"
               name="password"
               data-cy="password"

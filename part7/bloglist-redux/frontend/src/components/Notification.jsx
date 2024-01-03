@@ -10,7 +10,11 @@ const Notification = () => {
   if (!message) return null
 
   const msgClassType = isError ? 'error' : 'success'
-  return <Alert severity={msgClassType}>{message}</Alert>
+  return (
+    <Alert className={msgClassType} severity={msgClassType}>
+      {message}
+    </Alert>
+  )
 }
 
 export default Notification
