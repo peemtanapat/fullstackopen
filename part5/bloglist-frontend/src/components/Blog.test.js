@@ -9,8 +9,11 @@ describe('A Blog Rendering', () => {
   const author = 'Martin Fowler'
   const url = 'https://medium.com/peemtanapat'
   const user = {
-    name: 'peemtanapat',
+    name: 'Tanapat Choochot',
+    username: 'peemtanapat',
   }
+  const loggedUser = { username: 'peemtanapat' }
+
   const blog = {
     title,
     author,
@@ -52,7 +55,7 @@ describe('A Blog Rendering', () => {
   })
 
   test('click button "view", display blog\'s URL and number of likes', async () => {
-    render(<Blog blog={blog} />)
+    render(<Blog blog={blog} loggedUser={loggedUser} />)
     // before clicking
     screen.debug()
 
@@ -88,7 +91,13 @@ describe('A Blog Rendering', () => {
   test('like button is clicked twice, the event handler the component received as props is called twice', async () => {
     const clickLikeFn = jest.fn()
 
-    render(<Blog blog={blog} handleUpLikeBlog={clickLikeFn} />)
+    render(
+      <Blog
+        blog={blog}
+        handleUpLikeBlog={clickLikeFn}
+        loggedUser={loggedUser}
+      />,
+    )
 
     const user = userEvent.setup()
     const buttonViewDetail = screen.getByText('view')
