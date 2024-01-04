@@ -19,7 +19,7 @@ const App = () => {
   const dispatch = useDispatch()
   const user = useUserState()
 
-  const [forceLogout, setForceLogout] = useState(false)
+  const [, setForceLogout] = useState(false)
 
   useEffect(() => {
     if (user) {

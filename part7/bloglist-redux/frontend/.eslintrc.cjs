@@ -28,6 +28,6 @@ module.exports = {
     'no-console': 0,
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 0,
-    'no-unused-vars': 0,
+    // 'no-unused-vars': 0,
   },
 }
