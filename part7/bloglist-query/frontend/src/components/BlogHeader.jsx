@@ -1,5 +1,11 @@
 import { useContext } from 'react'
-import { Button, IconButton, ListItem, ListItemText } from '@mui/material'
+import {
+  Button,
+  IconButton,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@mui/material'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 
@@ -44,19 +50,22 @@ const BlogHeader = ({ blog }) => {
   return (
     <ListItem>
       <ListItemText
-        primary={`${blog.title}`}
-        secondary={blog.author}
+        primary={blog.title}
+        secondary={`${blog.author} | ${blog.url}`}
         data-cy="blog-headline"
       />
-      <IconButton
-        color="warning"
-        size="small"
-        data-cy="button-like-blog"
-        onClick={likeBlog}
-      >
-        <FavoriteIcon />
-        Like
-      </IconButton>
+      <Typography data-cy="blog-like-info">
+        Likes: {blog.likes}{' '}
+        <IconButton
+          color="warning"
+          size="small"
+          data-cy="button-like-blog"
+          onClick={likeBlog}
+        >
+          <FavoriteIcon />
+          Like
+        </IconButton>
+      </Typography>
       <RemoveBlogButton blog={blog} />
     </ListItem>
   )
