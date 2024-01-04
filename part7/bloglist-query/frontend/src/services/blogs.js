@@ -2,8 +2,7 @@ import axios from 'axios'
 
 const baseUrl = '/api/blogs'
 
-let token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlveW8iLCJpZCI6IjY1OTEzOWE4ZDIxZTFmNmRiODhmMzA0YSIsImlhdCI6MTcwNDI5NjQ4Nn0.OoXIe-ZbpCdZtqy_JfaM4xLgC7YdPZWKW6J-99cgBek`
-// let token = null
+let token = null
 
 const getAll = async () => {
   const request = await axios.get(baseUrl)
