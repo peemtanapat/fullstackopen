@@ -7,7 +7,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://fullstackopen.com/en">
     <img src="images/full_stack_open_logo.jpeg" alt="Logo" width="80" height="80">
   </a>
 
