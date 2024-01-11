@@ -99,7 +99,7 @@ Here are the main libraries/services used in this project.
 
 <!-- CONTACT -->
 
-## Contact
+## Contact Me
 
 - [![LINE][line-shield]][line-qr-url]
 - [![Facebook][fb-shield]][fb-url]
