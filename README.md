@@ -111,6 +111,7 @@ Here are the main libraries/services used in this project.
 ## Acknowledgments
 
 - https://dev.to/envoy_/150-badges-for-github-pnk
+- https://github.com/othneildrew/Best-README-Template
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
